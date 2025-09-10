@@ -1,0 +1,67 @@
+[
+  {
+    "id": "movie1",
+    "title": "Neon Nights",
+    "thumbnail": "/assets/movies/movie1.jpg",
+    "videoUrl": "/src/assets/videos/neon-nights.mp4",
+    "duration": "2h 15min",
+    "year": "2024",
+    "rating": "PG-13",
+    "genre": "Action, Thriller, Sci-Fi",
+    "description": "In a dystopian future where technology rules the night, a lone hacker discovers a conspiracy that threatens to unravel the very fabric of society. As neon lights illuminate the dark streets, our protagonist must navigate through a world of corporate espionage and digital warfare.",
+    "cast": "Alex Chen, Sarah Rodriguez, Michael Thompson",
+    "director": "David Park"
+  },
+  {
+    "id": "movie2",
+    "title": "Dragon's Crown",
+    "thumbnail": "/assets/movies/movie2.jpg",
+    "videoUrl": "/src/assets/videos/dragons-crown.mp4",
+    "duration": "2h 30min",
+    "year": "2024",
+    "rating": "PG",
+    "genre": "Fantasy, Adventure",
+    "description": "An epic fantasy adventure following a young knight who must recover the legendary Dragon's Crown to save her kingdom from an ancient evil. Journey through mystical lands filled with magical creatures and deadly challenges.",
+    "cast": "Emma Stone, Chris Hemsworth, Ian McKellen",
+    "director": "Peter Jackson"
+  },
+  {
+    "id": "movie3",
+    "title": "Galactic Odyssey",
+    "thumbnail": "/assets/movies/movie3.jpg",
+    "videoUrl": "/src/assets/videos/galactic-odyssey.mp4",
+    "duration": "2h 45min",
+    "year": "2024",
+    "rating": "PG-13",
+    "genre": "Sci-Fi, Adventure",
+    "description": "A sweeping space epic that follows humanity's first journey to the stars, where they encounter ancient civilizations and uncover secrets that could change the universe forever.",
+    "cast": "Zendaya, Oscar Isaac, John Boyega",
+    "director": "Denis Villeneuve"
+  },
+  {
+    "id": "movie4",
+    "title": "Summer Love",
+    "thumbnail": "/assets/movies/movie4.jpg",
+    "videoUrl": "/src/assets/videos/summer-love.mp4",
+    "duration": "1h 45min",
+    "year": "2024",
+    "rating": "PG",
+    "genre": "Romance, Comedy",
+    "description": "A heartwarming romantic comedy about two people who meet during a magical summer and discover that sometimes the best things in life happen when you least expect them.",
+    "cast": "Timothée Chalamet, Anya Taylor-Joy, Michael Cera",
+    "director": "Greta Gerwig"
+  },
+  {
+    "id": "movie5",
+    "title": "Midnight Terror",
+    "thumbnail": "/assets/movies/movie5.jpg",
+    "videoUrl": "/src/assets/videos/midnight-terror.mp4",
+    "duration": "1h 55min",
+    "year": "2024",
+    "rating": "R",
+    "genre": "Horror, Thriller",
+    "description": "A spine-chilling horror thriller that takes place in an abandoned mansion where a group of friends discover that some secrets are better left buried.",
+    "cast": "Lupita Nyong'o, Tessa Thompson, LaKeith Stanfield",
+    "director": "Jordan Peele"
+  }
+]

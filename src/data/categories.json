@@ -1,0 +1,33 @@
+{
+  "trending": [
+    "movie3",
+    "movie4",
+    "movie1",
+    "movie2"
+  ],
+  "popular": [
+    "movie1",
+    "movie2",
+    "movie3",
+    "movie4",
+    "movie5"
+  ],
+  "originals": [
+    "movie2",
+    "movie1",
+    "movie5",
+    "movie3"
+  ],
+  "action": [
+    "movie1",
+    "movie3",
+    "movie5"
+  ],
+  "comedy": [
+    "movie4",
+    "movie2"
+  ],
+  "horror": [
+    "movie5"
+  ]
+}

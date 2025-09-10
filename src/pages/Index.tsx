@@ -27,7 +27,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-8 space-y-12">
           <VideoCarousel title="Trending Now" videos={trendingMovies} />
           <VideoCarousel title="Popular Movies" videos={popularMovies} />
-          <VideoCarousel title="MyStar Originals" videos={originalsMovies} />
+          <VideoCarousel title="StarStream Originals" videos={originalsMovies} />
         </div>
       </main>
 

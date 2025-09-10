@@ -29,7 +29,7 @@ const HeroSection = () => {
         <div className="max-w-2xl">
           {/* Badge */}
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-4 backdrop-blur-sm">
-            MyStar Original
+            StarStream Original
           </div>
 
           {/* Title */}

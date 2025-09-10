@@ -13,7 +13,7 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <a href="/" className="logo-glow text-2xl font-bold tracking-tight">
-              MyStar
+              StarStream
             </a>
             
             {/* Desktop Navigation Links */}

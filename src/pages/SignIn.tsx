@@ -1,0 +1,308 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Mail, Phone, ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import Footer from "@/components/Footer";
+
+const SignIn = () => {
+  const [step, setStep] = useState(1); // 1: Contact Info, 2: OTP Verification
+  const [formData, setFormData] = useState({
+    email: "",
+    mobile: "",
+    authMethod: "email", // "email" or "mobile"
+  });
+  const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validateContact = () => {
+    if (formData.authMethod === "email" && !formData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (formData.authMethod === "mobile" && !formData.mobile) {
+      toast({
+        title: "Mobile Required",
+        description: "Please enter your mobile number.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateOTP = () => {
+    if (!otp || otp.length !== 6) {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter a valid 6-digit OTP.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleSendOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateContact()) return;
+
+    setIsLoading(true);
+
+    // Simulate OTP sending
+    setTimeout(() => {
+      setIsLoading(false);
+      setStep(2);
+      toast({
+        title: "OTP Sent!",
+        description: `We've sent a 6-digit OTP to your ${formData.authMethod === "email" ? "email" : "mobile number"}.`,
+      });
+    }, 1500);
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateOTP()) return;
+
+    setIsLoading(true);
+
+    // Simulate OTP verification
+    setTimeout(() => {
+      setIsLoading(false);
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully signed in to Cinesaga.",
+      });
+      navigate("/");
+    }, 1500);
+  };
+
+  const handleResendOTP = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast({
+        title: "OTP Resent!",
+        description: "A new OTP has been sent to your registered contact.",
+      });
+    }, 1000);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center p-4">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/")}
+          className="absolute -top-16 left-0 text-foreground-muted hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <Card className="backdrop-blur-md bg-background/95 border-border/20 shadow-2xl">
+          <CardHeader className="space-y-2 text-center pb-8">
+            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center mb-4">
+              <span className="text-2xl font-bold text-primary-foreground">C</span>
+            </div>
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+              Welcome Back
+            </CardTitle>
+            <CardDescription className="text-foreground-muted">
+              {step === 1
+                ? "Sign in to your Cinesaga account to continue watching"
+                : "Verify your contact to complete sign in"
+              }
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            {step === 1 ? (
+              <form onSubmit={handleSendOTP} className="space-y-4">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">Sign In Method</Label>
+                  <RadioGroup
+                    value={formData.authMethod}
+                    onValueChange={(value) => setFormData({ ...formData, authMethod: value })}
+                    className="flex space-x-6"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="email" id="email-method" />
+                      <Label htmlFor="email-method" className="flex items-center space-x-2 cursor-pointer">
+                        <Mail className="w-4 h-4" />
+                        <span>Email</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="mobile" id="mobile-method" />
+                      <Label htmlFor="mobile-method" className="flex items-center space-x-2 cursor-pointer">
+                        <Phone className="w-4 h-4" />
+                        <span>Mobile</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {formData.authMethod === "email" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium">
+                      Email Address
+                    </Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className="pl-10 h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Label htmlFor="mobile" className="text-sm font-medium">
+                      Mobile Number
+                    </Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
+                      <Input
+                        id="mobile"
+                        name="mobile"
+                        type="tel"
+                        placeholder="Enter your mobile number"
+                        value={formData.mobile}
+                        onChange={handleInputChange}
+                        className="pl-10 h-11"
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark text-primary-foreground font-semibold"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Sending OTP..." : "Send OTP"}
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOTP} className="space-y-4">
+                <div className="text-center space-y-2">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                    {formData.authMethod === "email" ? (
+                      <Mail className="w-8 h-8 text-primary" />
+                    ) : (
+                      <Phone className="w-8 h-8 text-primary" />
+                    )}
+                  </div>
+                  <h3 className="text-lg font-semibold">Verify Your {formData.authMethod === "email" ? "Email" : "Mobile"}</h3>
+                  <p className="text-sm text-foreground-muted">
+                    We've sent a 6-digit OTP to{" "}
+                    <span className="font-medium text-foreground">
+                      {formData.authMethod === "email" ? formData.email : formData.mobile}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="otp" className="text-sm font-medium">
+                    Enter OTP
+                  </Label>
+                  <Input
+                    id="otp"
+                    type="text"
+                    placeholder="000000"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    className="h-11 text-center text-lg tracking-widest"
+                    maxLength={6}
+                    required
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-foreground-muted">Didn't receive the code?</span>
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={handleResendOTP}
+                    disabled={isLoading}
+                    className="p-0 h-auto text-primary hover:text-primary-dark"
+                  >
+                    Resend OTP
+                  </Button>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark text-primary-foreground font-semibold"
+                  disabled={isLoading || otp.length !== 6}
+                >
+                  {isLoading ? "Verifying..." : "Sign In"}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(1)}
+                  className="w-full h-11"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Contact
+                </Button>
+              </form>
+            )}
+
+            <div className="text-center text-sm">
+              <span className="text-foreground-muted">Don't have an account? </span>
+              <Link
+                to="/signup"
+                className="text-primary hover:text-primary-dark hover:underline font-medium"
+              >
+                Sign up
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default SignIn;

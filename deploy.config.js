@@ -1,10 +1,10 @@
 /**
  * Deployment Configuration for tulsipada.in
- * StarStream - Modern Streaming Platform
+ * Cinesaga - Modern Streaming Platform
  * 
  * Developer: tulsipada
  * Website: https://tulsipada.in
- * Repository: https://github.com/tulsipada/starstream
+ * Repository: https://github.com/tulsipada/cinesaga
  */
 
 export default {
@@ -15,17 +15,17 @@ export default {
     buildCommand: 'npm run build:prod',
     outputDir: 'dist',
     deployCommand: 'npm run deploy',
-    
+
     // Performance settings
     compression: true,
     minification: true,
     sourceMaps: false,
-    
+
     // SEO settings
     metaTags: {
-      title: 'StarStream - Modern Streaming Platform',
-      description: 'Experience the future of streaming with StarStream. Watch trending movies, popular shows, and exclusive original content.',
-      keywords: 'streaming, movies, tv shows, entertainment, starstream, tulsipada',
+      title: 'Cinesaga - Modern Streaming Platform',
+      description: 'Experience the future of streaming with Cinesaga. Watch trending movies, popular shows, and exclusive original content.',
+      keywords: 'streaming, movies, tv shows, entertainment, cinesaga, tulsipada',
       author: 'tulsipada',
       ogImage: '/assets/heroes/hero-dragon.jpg'
     }
@@ -38,12 +38,12 @@ export default {
     buildCommand: 'npm run build:dev',
     outputDir: 'dist',
     deployCommand: 'npm run deploy:dev',
-    
+
     // Development settings
     compression: false,
     minification: false,
     sourceMaps: true,
-    
+
     // Debug settings
     debug: true,
     verbose: true
@@ -51,10 +51,10 @@ export default {
 
   // GitHub Pages deployment
   githubPages: {
-    repository: 'tulsipada/starstream',
+    repository: 'tulsipada/cinesaga',
     branch: 'gh-pages',
-    domain: 'tulsipada.github.io/starstream',
-    baseUrl: 'https://tulsipada.github.io/starstream',
+    domain: 'tulsipada.github.io/cinesaga',
+    baseUrl: 'https://tulsipada.github.io/cinesaga',
     buildCommand: 'npm run build:prod',
     outputDir: 'dist',
     deployCommand: 'gh-pages -d dist'
@@ -64,13 +64,13 @@ export default {
   optimization: {
     // Bundle analysis
     analyze: false,
-    
+
     // Code splitting
     codeSplitting: true,
-    
+
     // Tree shaking
     treeShaking: true,
-    
+
     // Asset optimization
     imageOptimization: true,
     fontOptimization: true
@@ -80,13 +80,13 @@ export default {
   env: {
     production: {
       NODE_ENV: 'production',
-      VITE_APP_TITLE: 'StarStream',
+      VITE_APP_TITLE: 'Cinesaga',
       VITE_APP_DOMAIN: 'tulsipada.in',
       VITE_APP_API_URL: 'https://api.tulsipada.in'
     },
     development: {
       NODE_ENV: 'development',
-      VITE_APP_TITLE: 'StarStream (Dev)',
+      VITE_APP_TITLE: 'Cinesaga (Dev)',
       VITE_APP_DOMAIN: 'dev.tulsipada.in',
       VITE_APP_API_URL: 'https://dev-api.tulsipada.in'
     }

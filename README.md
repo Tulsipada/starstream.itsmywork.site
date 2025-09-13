@@ -1,6 +1,6 @@
-# StarStream
+# Cinesaga
 
-A modern streaming platform built with React, TypeScript, and Vite. StarStream provides an immersive viewing experience with a sleek interface and smooth navigation.
+A modern streaming platform built with React, TypeScript, and Vite. Cinesaga provides an immersive viewing experience with a sleek interface and smooth navigation.
 
 **Live Demo**: [https://tulsipada.in](https://tulsipada.in)
 
@@ -89,7 +89,7 @@ src/
 - **Manual Deploy**: Build and upload `dist/` folder to web server
 
 ### Project Management
-- **Repository**: [GitHub - tulsipada/starstream](https://github.com/tulsipada/starstream)
+- **Repository**: [GitHub - tulsipada/cinesaga](https://github.com/tulsipada/cinesaga)
 - **Live Site**: [https://tulsipada.in](https://tulsipada.in)
 - **Developer**: tulsipada (contact@tulsipada.in)
 - **Tech Stack**: React 18, TypeScript, Vite, Tailwind CSS, Shadcn UI

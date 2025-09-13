@@ -2,6 +2,7 @@ import { Search, User, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -33,18 +34,18 @@ const Navigation = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-4 sm:space-x-8">
-            <a href="/" className="logo-glow text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
+            <Link to="/" className="logo-glow text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
               Cinesaga
-            </a>
+            </Link>
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-6">
-              <a href="/" className="nav-link">Home</a>
-              <a href="/movies" className="nav-link">Movies</a>
-              <a href="/originals" className="nav-link">Originals</a>
-              <a href="/watchlist" className="nav-link">Watchlist</a>
-              <a href="/watch-history" className="nav-link">History</a>
-              <a href="/contact" className="nav-link">Contact</a>
+              <Link to="/" className="nav-link">Home</Link>
+              <Link to="/movies" className="nav-link">Movies</Link>
+              <Link to="/originals" className="nav-link">Originals</Link>
+              <Link to="/watchlist" className="nav-link">Watchlist</Link>
+              <Link to="/watch-history" className="nav-link">History</Link>
+              <Link to="/contact" className="nav-link">Contact</Link>
             </div>
           </div>
 
@@ -70,10 +71,10 @@ const Navigation = () => {
             {/* Auth Buttons */}
             <div className="hidden sm:flex items-center space-x-2">
               <Button variant="ghost" size="sm" asChild>
-                <a href="/signin">Sign In</a>
+                <Link to="/signin">Sign In</Link>
               </Button>
               <Button size="sm" asChild>
-                <a href="/signup">Sign Up</a>
+                <Link to="/signup">Sign Up</Link>
               </Button>
             </div>
 
@@ -111,21 +112,21 @@ const Navigation = () => {
 
                 {/* Mobile Navigation Links */}
                 <div className="flex flex-col space-y-3">
-                  <a href="/" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</a>
-                  <a href="/movies" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Movies</a>
-                  <a href="/originals" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Originals</a>
-                  <a href="/watchlist" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Watchlist</a>
-                  <a href="/watch-history" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>History</a>
-                  <a href="/contact" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
+                  <Link to="/" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+                  <Link to="/movies" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Movies</Link>
+                  <Link to="/originals" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Originals</Link>
+                  <Link to="/watchlist" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Watchlist</Link>
+                  <Link to="/watch-history" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>History</Link>
+                  <Link to="/contact" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
                 </div>
 
                 {/* Mobile Auth Buttons */}
                 <div className="flex flex-col space-y-2 pt-4 border-t border-border/20">
                   <Button variant="outline" className="w-full" asChild>
-                    <a href="/signin" onClick={() => setIsMobileMenuOpen(false)}>Sign In</a>
+                    <Link to="/signin" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
                   </Button>
                   <Button className="w-full" asChild>
-                    <a href="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</a>
+                    <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
                   </Button>
                 </div>
               </div>

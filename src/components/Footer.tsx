@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Clock, Play, Apple } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   // Get current year dynamically
@@ -143,15 +144,15 @@ const Footer = () => {
             </div>
 
             <div className="flex flex-wrap justify-center md:justify-end gap-4 text-xs">
-              <a href="/privacy" className="text-foreground-muted hover:text-primary transition-colors duration-200">
+              <Link to="/privacy" className="text-foreground-muted hover:text-primary transition-colors duration-200">
                 Privacy Policy
-              </a>
-              <a href="/terms" className="text-foreground-muted hover:text-primary transition-colors duration-200">
+              </Link>
+              <Link to="/terms" className="text-foreground-muted hover:text-primary transition-colors duration-200">
                 Terms of Service
-              </a>
-              <a href="/contact" className="text-foreground-muted hover:text-primary transition-colors duration-200">
+              </Link>
+              <Link to="/contact" className="text-foreground-muted hover:text-primary transition-colors duration-200">
                 Contact Us
-              </a>
+              </Link>
             </div>
           </div>
         </div>

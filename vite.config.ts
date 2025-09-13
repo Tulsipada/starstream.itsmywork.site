@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // Enable client-side routing for React Router
+    historyApiFallback: true,
   },
   plugins: [react()],
   resolve: {
@@ -28,5 +30,9 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
+  },
+  preview: {
+    // Enable client-side routing for preview mode
+    historyApiFallback: true,
   },
 }));

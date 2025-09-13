@@ -8,7 +8,7 @@ const Footer = () => {
   // No quick links - keeping footer minimal
 
   const socialLinks = [
-    { name: "Facebook", icon: Facebook, href: "https://facebook.com/cinesaga" },
+    { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/cinesaga.in" },
     { name: "Twitter", icon: Twitter, href: "https://twitter.com/cinesaga" },
     { name: "Instagram", icon: Instagram, href: "https://instagram.com/cinesaga" },
     { name: "YouTube", icon: Youtube, href: "https://youtube.com/cinesaga" },

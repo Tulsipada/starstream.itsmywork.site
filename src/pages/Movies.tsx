@@ -9,9 +9,11 @@ import { ArrowLeft, Search, Play, Plus, Filter, Calendar, Star, Heart, Bookmark 
 import { useNavigate } from "react-router-dom";
 import moviesData from "@/data/movies.json";
 import Footer from "@/components/Footer";
+import { useMobileDetection } from "@/hooks/use-mobile-detection";
 
 const Movies = () => {
     const navigate = useNavigate();
+    const isMobile = useMobileDetection();
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState("popular");
     const [filterBy, setFilterBy] = useState("all");
@@ -89,12 +91,12 @@ const Movies = () => {
                 </div>
 
                 {/* Content */}
-                <div className="container mx-auto px-4 py-8">
-                    <div className="space-y-6">
+                <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+                    <div className="space-y-6 sm:space-y-8">
                         {/* Hero Section */}
-                        <div className="text-center py-8">
-                            <h2 className="text-3xl font-bold mb-4">Discover Amazing Movies</h2>
-                            <p className="text-foreground-muted text-lg max-w-2xl mx-auto">
+                        <div className="text-center py-6 sm:py-8">
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Discover Amazing Movies</h2>
+                            <p className="text-foreground-muted text-base sm:text-lg max-w-2xl mx-auto px-4">
                                 Explore our vast collection of movies from every genre. From blockbusters to indie films,
                                 find your next favorite movie.
                             </p>
@@ -102,8 +104,8 @@ const Movies = () => {
 
                         {/* Filters and Search */}
                         <Card className="backdrop-blur-md bg-background/95 border-border/20">
-                            <CardContent className="p-4">
-                                <div className="flex flex-col lg:flex-row gap-4">
+                            <CardContent className="p-3 sm:p-4">
+                                <div className="flex flex-col gap-3 sm:gap-4">
                                     <div className="flex-1">
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
@@ -111,13 +113,13 @@ const Movies = () => {
                                                 placeholder="Search movies..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="pl-10"
+                                                className="pl-10 h-10 sm:h-11"
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex flex-wrap gap-2 sm:gap-3">
                                         <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-40">
+                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
                                                 <SelectValue placeholder="Sort by" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -129,7 +131,7 @@ const Movies = () => {
                                         </Select>
 
                                         <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-32">
+                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
                                                 <SelectValue placeholder="Genre" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -145,7 +147,7 @@ const Movies = () => {
                                         </Select>
 
                                         <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-24">
+                                            <SelectTrigger className="w-full sm:w-24 h-10 sm:h-11">
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -168,21 +170,21 @@ const Movies = () => {
                         </div>
 
                         {/* Movies Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
                             {filteredMovies.length === 0 ? (
                                 <div className="col-span-full">
                                     <Card className="backdrop-blur-md bg-background/95 border-border/20">
-                                        <CardContent className="p-8 text-center">
-                                            <Search className="w-16 h-16 text-foreground-muted mx-auto mb-4" />
-                                            <h3 className="text-lg font-semibold mb-2">No movies found</h3>
-                                            <p className="text-foreground-muted mb-4">
+                                        <CardContent className="p-6 sm:p-8 text-center">
+                                            <Search className="w-12 h-12 sm:w-16 sm:h-16 text-foreground-muted mx-auto mb-3 sm:mb-4" />
+                                            <h3 className="text-base sm:text-lg font-semibold mb-2">No movies found</h3>
+                                            <p className="text-foreground-muted mb-4 text-sm sm:text-base">
                                                 Try adjusting your search or filters to find what you're looking for
                                             </p>
                                             <Button onClick={() => {
                                                 setSearchQuery("");
                                                 setFilterBy("all");
                                                 setYearFilter("all");
-                                            }}>
+                                            }} className="text-sm sm:text-base">
                                                 Clear Filters
                                             </Button>
                                         </CardContent>
@@ -196,7 +198,7 @@ const Movies = () => {
                                                 <img
                                                     src={movie.thumbnail}
                                                     alt={movie.title}
-                                                    className="w-full h-64 object-cover rounded-t-lg"
+                                                    className="w-full h-48 sm:h-64 object-cover rounded-t-lg"
                                                 />
                                                 <div className="absolute inset-0 bg-black/50 rounded-t-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <div className="flex gap-2">
@@ -237,10 +239,10 @@ const Movies = () => {
                                                 </div>
                                             </div>
 
-                                            <div className="p-4">
+                                            <div className="p-3 sm:p-4">
                                                 <div className="space-y-2">
-                                                    <h3 className="font-semibold text-lg line-clamp-1">{movie.title}</h3>
-                                                    <div className="flex items-center gap-2">
+                                                    <h3 className="font-semibold text-base sm:text-lg line-clamp-1">{movie.title}</h3>
+                                                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
                                                         <Badge variant="outline" className="text-xs">
                                                             {movie.genre}
                                                         </Badge>
@@ -248,11 +250,11 @@ const Movies = () => {
                                                             {movie.year}
                                                         </Badge>
                                                     </div>
-                                                    <p className="text-sm text-foreground-muted line-clamp-2">
+                                                    <p className="text-xs sm:text-sm text-foreground-muted line-clamp-2">
                                                         {movie.description}
                                                     </p>
-                                                    <div className="flex items-center justify-between text-sm text-foreground-muted">
-                                                        <div className="flex items-center gap-3">
+                                                    <div className="flex items-center justify-between text-xs sm:text-sm text-foreground-muted">
+                                                        <div className="flex items-center gap-2 sm:gap-3">
                                                             <span className="flex items-center gap-1">
                                                                 <Calendar className="w-3 h-3" />
                                                                 {movie.year}
@@ -266,10 +268,10 @@ const Movies = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-4 flex gap-2">
-                                                    <Button size="sm" className="flex-1" asChild>
+                                                <div className="mt-3 sm:mt-4 flex gap-2">
+                                                    <Button size="sm" className="flex-1 text-xs sm:text-sm" asChild>
                                                         <Link to={`/watch/${movie.id}`}>
-                                                            <Play className="w-4 h-4 mr-1" />
+                                                            <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                                             Watch Now
                                                         </Link>
                                                     </Button>
@@ -277,8 +279,9 @@ const Movies = () => {
                                                         size="sm"
                                                         variant="outline"
                                                         onClick={() => addToWatchlist(movie.id)}
+                                                        className="px-2 sm:px-3"
                                                     >
-                                                        <Plus className="w-4 h-4" />
+                                                        <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                                                     </Button>
                                                 </div>
                                             </div>

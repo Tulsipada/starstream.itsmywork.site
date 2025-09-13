@@ -150,12 +150,12 @@ const WatchHistory = () => {
                 </div>
 
                 {/* Content */}
-                <div className="container mx-auto px-4 py-8">
-                    <div className="space-y-6">
+                <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+                    <div className="space-y-6 sm:space-y-8">
                         {/* Filters and Search */}
                         <Card className="backdrop-blur-md bg-background/95 border-border/20">
-                            <CardContent className="p-4">
-                                <div className="flex flex-col md:flex-row gap-4">
+                            <CardContent className="p-3 sm:p-4">
+                                <div className="flex flex-col gap-3 sm:gap-4">
                                     <div className="flex-1">
                                         <div className="relative">
                                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
@@ -163,13 +163,13 @@ const WatchHistory = () => {
                                                 placeholder="Search watch history..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="pl-10"
+                                                className="pl-10 h-10 sm:h-11"
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2 sm:gap-3">
                                         <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-40">
+                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
                                                 <SelectValue placeholder="Sort by" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -181,7 +181,7 @@ const WatchHistory = () => {
                                         </Select>
 
                                         <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-32">
+                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
                                                 <SelectValue placeholder="Filter" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -202,13 +202,13 @@ const WatchHistory = () => {
                         <div className="space-y-4">
                             {filteredHistory.length === 0 ? (
                                 <Card className="backdrop-blur-md bg-background/95 border-border/20">
-                                    <CardContent className="p-8 text-center">
-                                        <Clock className="w-16 h-16 text-foreground-muted mx-auto mb-4" />
-                                        <h3 className="text-lg font-semibold mb-2">No watch history found</h3>
-                                        <p className="text-foreground-muted mb-4">
+                                    <CardContent className="p-6 sm:p-8 text-center">
+                                        <Clock className="w-12 h-12 sm:w-16 sm:h-16 text-foreground-muted mx-auto mb-3 sm:mb-4" />
+                                        <h3 className="text-base sm:text-lg font-semibold mb-2">No watch history found</h3>
+                                        <p className="text-foreground-muted mb-4 text-sm sm:text-base">
                                             {searchQuery ? "Try adjusting your search or filters" : "Start watching to build your history"}
                                         </p>
-                                        <Button asChild>
+                                        <Button asChild className="text-sm sm:text-base">
                                             <Link to="/">Browse Content</Link>
                                         </Button>
                                     </CardContent>
@@ -216,9 +216,9 @@ const WatchHistory = () => {
                             ) : (
                                 filteredHistory.map((item) => (
                                     <Card key={item.id} className="backdrop-blur-md bg-background/95 border-border/20 hover:border-primary/30 transition-colors">
-                                        <CardContent className="p-4">
-                                            <div className="flex gap-4">
-                                                <div className="relative w-24 h-16 flex-shrink-0">
+                                        <CardContent className="p-3 sm:p-4">
+                                            <div className="flex gap-3 sm:gap-4">
+                                                <div className="relative w-20 h-14 sm:w-24 sm:h-16 flex-shrink-0">
                                                     <img
                                                         src={item.thumbnail}
                                                         alt={item.title}
@@ -227,7 +227,7 @@ const WatchHistory = () => {
                                                     <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                                                         <Button size="sm" variant="secondary" asChild>
                                                             <Link to={`/watch/${item.id}`}>
-                                                                <Play className="w-4 h-4" />
+                                                                <Play className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Link>
                                                         </Button>
                                                     </div>
@@ -236,8 +236,8 @@ const WatchHistory = () => {
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex-1 min-w-0">
-                                                            <h3 className="font-semibold text-lg truncate">{item.title}</h3>
-                                                            <div className="flex items-center gap-2 mt-1">
+                                                            <h3 className="font-semibold text-base sm:text-lg truncate">{item.title}</h3>
+                                                            <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
                                                                 <Badge variant="secondary" className="text-xs">
                                                                     {item.type}
                                                                 </Badge>
@@ -248,7 +248,7 @@ const WatchHistory = () => {
                                                                     {item.year}
                                                                 </Badge>
                                                             </div>
-                                                            <div className="flex items-center gap-4 mt-2 text-sm text-foreground-muted">
+                                                            <div className="flex items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-sm text-foreground-muted flex-wrap">
                                                                 <span className="flex items-center gap-1">
                                                                     <Calendar className="w-3 h-3" />
                                                                     {formatDate(item.watchedAt)}
@@ -264,18 +264,18 @@ const WatchHistory = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center gap-2 ml-4">
-                                                            <Button size="sm" variant="outline" asChild>
+                                                        <div className="flex items-center gap-1 sm:gap-2 ml-2 sm:ml-4">
+                                                            <Button size="sm" variant="outline" asChild className="text-xs sm:text-sm">
                                                                 <Link to={`/watch/${item.id}`}>
-                                                                    <Play className="w-4 h-4 mr-1" />
+                                                                    <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                                                     {item.progress === 100 ? "Replay" : "Continue"}
                                                                 </Link>
                                                             </Button>
-                                                            <Button size="sm" variant="ghost">
-                                                                <Plus className="w-4 h-4" />
+                                                            <Button size="sm" variant="ghost" className="p-1 sm:p-2">
+                                                                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Button>
-                                                            <Button size="sm" variant="ghost" onClick={() => removeFromHistory(item.id)}>
-                                                                <Trash2 className="w-4 h-4" />
+                                                            <Button size="sm" variant="ghost" onClick={() => removeFromHistory(item.id)} className="p-1 sm:p-2">
+                                                                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Button>
                                                         </div>
                                                     </div>

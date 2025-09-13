@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Mail, Phone, ArrowLeft } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Mail, Phone, ArrowLeft, Star, Shield, Zap, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import Footer from "@/components/Footer";
 
 const SignIn = () => {
   const [step, setStep] = useState(1); // 1: Contact Info, 2: OTP Verification
@@ -111,33 +112,52 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 flex items-center justify-center p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
+      {/* Enhanced Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.2)_1px,transparent_0)] bg-[length:24px_24px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-background/20" />
       </div>
 
-      <div className="relative w-full max-w-md">
-        {/* Back Button */}
+      <div className="relative w-full max-w-lg">
+        {/* Enhanced Back Button */}
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate("/")}
-          className="absolute -top-16 left-0 text-foreground-muted hover:text-foreground"
+          className="absolute -top-16 left-0 text-foreground-muted hover:text-foreground hover:bg-primary/10 transition-all duration-200"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Button>
 
-        <Card className="backdrop-blur-md bg-background/95 border-border/20 shadow-2xl">
-          <CardHeader className="space-y-2 text-center pb-8">
-            <div className="mx-auto w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-primary-foreground">C</span>
+        {/* Progress Indicator */}
+        <div className="absolute -top-12 left-0 right-0 flex justify-center">
+          <div className="flex items-center space-x-2">
+            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-primary scale-125' : 'bg-foreground-muted/30'}`} />
+            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-primary scale-125' : 'bg-foreground-muted/30'}`} />
+          </div>
+        </div>
+
+        <Card className="backdrop-blur-xl bg-background/98 border-border/30 shadow-2xl ring-1 ring-primary/10">
+          <CardHeader className="space-y-4 text-center pb-8">
+            {/* Enhanced Logo */}
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary via-primary to-accent rounded-2xl flex items-center justify-center mb-4 shadow-lg ring-2 ring-primary/20">
+              <span className="text-3xl font-bold text-primary-foreground">C</span>
             </div>
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Welcome Back
-            </CardTitle>
-            <CardDescription className="text-foreground-muted">
+
+            {/* Enhanced Title */}
+            <div className="space-y-2">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
+                Welcome Back
+              </CardTitle>
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                <Star className="w-3 h-3 mr-1" />
+                Continue Your Journey
+              </Badge>
+            </div>
+
+            <CardDescription className="text-foreground-muted text-base">
               {step === 1
                 ? "Sign in to your Cinesaga account to continue watching"
                 : "Verify your contact to complete sign in"
@@ -145,40 +165,54 @@ const SignIn = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-8">
             {step === 1 ? (
-              <form onSubmit={handleSendOTP} className="space-y-4">
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium">Sign In Method</Label>
+              <form onSubmit={handleSendOTP} className="space-y-6">
+                {/* Enhanced Sign In Method Selection */}
+                <div className="space-y-4">
+                  <Label className="text-sm font-semibold text-foreground">Sign In Method</Label>
                   <RadioGroup
                     value={formData.authMethod}
                     onValueChange={(value) => setFormData({ ...formData, authMethod: value })}
-                    className="flex space-x-6"
+                    className="grid grid-cols-2 gap-3"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="email" id="email-method" />
-                      <Label htmlFor="email-method" className="flex items-center space-x-2 cursor-pointer">
-                        <Mail className="w-4 h-4" />
-                        <span>Email</span>
+                    <div className="relative">
+                      <RadioGroupItem value="email" id="email-method" className="sr-only" />
+                      <Label
+                        htmlFor="email-method"
+                        className={`flex items-center justify-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${formData.authMethod === "email"
+                          ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                          : "border-border/50 hover:border-primary/30 hover:bg-primary/5"
+                          }`}
+                      >
+                        <Mail className={`w-5 h-5 ${formData.authMethod === "email" ? "text-primary" : "text-foreground-muted"}`} />
+                        <span className={`font-medium ${formData.authMethod === "email" ? "text-primary" : "text-foreground"}`}>Email</span>
                       </Label>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="mobile" id="mobile-method" />
-                      <Label htmlFor="mobile-method" className="flex items-center space-x-2 cursor-pointer">
-                        <Phone className="w-4 h-4" />
-                        <span>Mobile</span>
+                    <div className="relative">
+                      <RadioGroupItem value="mobile" id="mobile-method" className="sr-only" />
+                      <Label
+                        htmlFor="mobile-method"
+                        className={`flex items-center justify-center space-x-3 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${formData.authMethod === "mobile"
+                          ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                          : "border-border/50 hover:border-primary/30 hover:bg-primary/5"
+                          }`}
+                      >
+                        <Phone className={`w-5 h-5 ${formData.authMethod === "mobile" ? "text-primary" : "text-foreground-muted"}`} />
+                        <span className={`font-medium ${formData.authMethod === "mobile" ? "text-primary" : "text-foreground"}`}>Mobile</span>
                       </Label>
                     </div>
                   </RadioGroup>
                 </div>
 
+                {/* Enhanced Contact Input */}
                 {formData.authMethod === "email" ? (
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">
+                  <div className="space-y-3">
+                    <Label htmlFor="email" className="text-sm font-semibold text-foreground">
                       Email Address
                     </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
+                    <div className="relative group">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4 group-focus-within:text-primary transition-colors" />
                       <Input
                         id="email"
                         name="email"
@@ -186,18 +220,18 @@ const SignIn = () => {
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="pl-10 h-11"
+                        className="pl-10 h-12 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                         required
                       />
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile" className="text-sm font-medium">
+                  <div className="space-y-3">
+                    <Label htmlFor="mobile" className="text-sm font-semibold text-foreground">
                       Mobile Number
                     </Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
+                    <div className="relative group">
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4 group-focus-within:text-primary transition-colors" />
                       <Input
                         id="mobile"
                         name="mobile"
@@ -205,42 +239,57 @@ const SignIn = () => {
                         placeholder="Enter your mobile number"
                         value={formData.mobile}
                         onChange={handleInputChange}
-                        className="pl-10 h-11"
+                        className="pl-10 h-12 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                         required
                       />
                     </div>
                   </div>
                 )}
 
+                {/* Enhanced Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark text-primary-foreground font-semibold"
+                  className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Sending OTP..." : "Send OTP"}
+                  {isLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      <span>Sending OTP...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <Zap className="w-4 h-4" />
+                      <span>Send OTP</span>
+                    </div>
+                  )}
                 </Button>
               </form>
             ) : (
-              <form onSubmit={handleVerifyOTP} className="space-y-4">
-                <div className="text-center space-y-2">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+              <form onSubmit={handleVerifyOTP} className="space-y-6">
+                {/* Enhanced OTP Verification Header */}
+                <div className="text-center space-y-4">
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center mx-auto shadow-lg ring-2 ring-primary/10">
                     {formData.authMethod === "email" ? (
-                      <Mail className="w-8 h-8 text-primary" />
+                      <Mail className="w-10 h-10 text-primary" />
                     ) : (
-                      <Phone className="w-8 h-8 text-primary" />
+                      <Phone className="w-10 h-10 text-primary" />
                     )}
                   </div>
-                  <h3 className="text-lg font-semibold">Verify Your {formData.authMethod === "email" ? "Email" : "Mobile"}</h3>
-                  <p className="text-sm text-foreground-muted">
-                    We've sent a 6-digit OTP to{" "}
-                    <span className="font-medium text-foreground">
-                      {formData.authMethod === "email" ? formData.email : formData.mobile}
-                    </span>
-                  </p>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground">Verify Your {formData.authMethod === "email" ? "Email" : "Mobile"}</h3>
+                    <p className="text-sm text-foreground-muted">
+                      We've sent a 6-digit OTP to{" "}
+                      <span className="font-semibold text-primary">
+                        {formData.authMethod === "email" ? formData.email : formData.mobile}
+                      </span>
+                    </p>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="otp" className="text-sm font-medium">
+                {/* Enhanced OTP Input */}
+                <div className="space-y-3">
+                  <Label htmlFor="otp" className="text-sm font-semibold text-foreground">
                     Enter OTP
                   </Label>
                   <Input
@@ -249,58 +298,73 @@ const SignIn = () => {
                     placeholder="000000"
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    className="h-11 text-center text-lg tracking-widest"
+                    className="h-14 text-center text-2xl tracking-[0.5em] font-mono border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                     maxLength={6}
                     required
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-foreground-muted">Didn't receive the code?</span>
+                {/* Enhanced Resend Section */}
+                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-border/50">
+                  <span className="text-sm text-foreground-muted">Didn't receive the code?</span>
                   <Button
                     type="button"
                     variant="link"
                     onClick={handleResendOTP}
                     disabled={isLoading}
-                    className="p-0 h-auto text-primary hover:text-primary-dark"
+                    className="p-0 h-auto text-primary hover:text-primary-dark font-medium"
                   >
                     Resend OTP
                   </Button>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent-dark text-primary-foreground font-semibold"
-                  disabled={isLoading || otp.length !== 6}
-                >
-                  {isLoading ? "Verifying..." : "Sign In"}
-                </Button>
+                {/* Enhanced Action Buttons */}
+                <div className="space-y-3">
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoading || otp.length !== 6}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        <span>Verifying...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-2">
+                        <LogIn className="w-4 h-4" />
+                        <span>Sign In</span>
+                      </div>
+                    )}
+                  </Button>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  className="w-full h-11"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Contact
-                </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setStep(1)}
+                    className="w-full h-12 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
+                  >
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back to Contact
+                  </Button>
+                </div>
               </form>
             )}
 
-            <div className="text-center text-sm">
-              <span className="text-foreground-muted">Don't have an account? </span>
+            {/* Enhanced Footer Link */}
+            <Separator className="my-6" />
+            <div className="text-center">
+              <p className="text-sm text-foreground-muted mb-2">Don't have an account?</p>
               <Link
                 to="/signup"
-                className="text-primary hover:text-primary-dark hover:underline font-medium"
+                className="inline-flex items-center text-primary hover:text-primary-dark hover:underline font-semibold transition-colors duration-200"
               >
-                Sign up
+                Create your account
               </Link>
             </div>
           </CardContent>
         </Card>
       </div>
-      <Footer />
     </div>
   );
 };

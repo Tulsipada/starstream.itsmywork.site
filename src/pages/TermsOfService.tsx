@@ -42,33 +42,33 @@ const TermsOfService = () => {
                 </div>
 
                 {/* Content */}
-                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-4xl">
                     <Card className="backdrop-blur-md bg-background/95 border-border/20 shadow-xl">
-                        <CardHeader className="text-center pb-8">
-                            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                                <FileText className="w-8 h-8 text-primary" />
+                        <CardHeader className="text-center pb-6 sm:pb-8">
+                            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                                <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
                             </div>
-                            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                            <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
                                 Terms of Service
                             </CardTitle>
-                            <p className="text-foreground-muted mt-2">
+                            <p className="text-foreground-muted mt-2 text-sm sm:text-base">
                                 Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                             </p>
                         </CardHeader>
 
-                        <CardContent className="space-y-8">
+                        <CardContent className="space-y-6 sm:space-y-8">
                             <div className="prose prose-gray max-w-none">
                                 <section>
-                                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                                        <Scale className="w-6 h-6 mr-2 text-primary" />
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
+                                        <Scale className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
                                         Acceptance of Terms
                                     </h2>
                                     <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
                                             By accessing or using Cinesaga ("the Service"), you agree to be bound by these Terms of Service ("Terms"). If you disagree with any part of these terms, you may not access the Service.
                                         </p>
-                                        <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                                            <p className="text-sm text-foreground-muted">
+                                        <div className="p-3 sm:p-4 bg-primary/5 rounded-lg border border-primary/20">
+                                            <p className="text-xs sm:text-sm text-foreground-muted">
                                                 <strong>Important:</strong> These terms constitute a legally binding agreement between you and Cinesaga. Please read them carefully.
                                             </p>
                                         </div>

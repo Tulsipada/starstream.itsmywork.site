@@ -42,34 +42,34 @@ const PrivacyPolicy = () => {
                 </div>
 
                 {/* Content */}
-                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-4xl">
                     <Card className="backdrop-blur-md bg-background/95 border-border/20 shadow-xl">
-                        <CardHeader className="text-center pb-8">
-                            <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                                <Shield className="w-8 h-8 text-primary" />
+                        <CardHeader className="text-center pb-6 sm:pb-8">
+                            <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                                <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
                             </div>
-                            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                            <CardTitle className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
                                 Privacy Policy
                             </CardTitle>
-                            <p className="text-foreground-muted mt-2">
+                            <p className="text-foreground-muted mt-2 text-sm sm:text-base">
                                 Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                             </p>
                         </CardHeader>
 
-                        <CardContent className="space-y-8">
+                        <CardContent className="space-y-6 sm:space-y-8">
                             <div className="prose prose-gray max-w-none">
                                 <section>
-                                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                                        <Eye className="w-6 h-6 mr-2 text-primary" />
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
+                                        <Eye className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
                                         Information We Collect
                                     </h2>
                                     <div className="space-y-4">
                                         <div>
-                                            <h3 className="text-lg font-medium mb-2">Personal Information</h3>
-                                            <p className="text-foreground-muted leading-relaxed">
+                                            <h3 className="text-base sm:text-lg font-medium mb-2">Personal Information</h3>
+                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
                                                 When you create an account with Cinesaga, we collect information such as:
                                             </p>
-                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted">
+                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base">
                                                 <li>Name (first and last name)</li>
                                                 <li>Email address or mobile phone number</li>
                                                 <li>Account preferences and settings</li>
@@ -78,11 +78,11 @@ const PrivacyPolicy = () => {
                                         </div>
 
                                         <div>
-                                            <h3 className="text-lg font-medium mb-2">Usage Information</h3>
-                                            <p className="text-foreground-muted leading-relaxed">
+                                            <h3 className="text-base sm:text-lg font-medium mb-2">Usage Information</h3>
+                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
                                                 We automatically collect certain information about your use of our service:
                                             </p>
-                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted">
+                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base">
                                                 <li>Content you watch, search for, and interact with</li>
                                                 <li>Device information (type, operating system, browser)</li>
                                                 <li>IP address and location data</li>

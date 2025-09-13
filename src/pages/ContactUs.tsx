@@ -115,35 +115,35 @@ const ContactUs = () => {
                 </div>
 
                 {/* Content */}
-                <div className="container mx-auto px-4 py-8">
+                <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
                     <div className="max-w-6xl mx-auto">
-                        <div className="space-y-8">
+                        <div className="space-y-6 sm:space-y-8">
                             {/* Hero Section */}
-                            <div className="text-center py-8">
-                                <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
-                                <p className="text-foreground-muted text-lg max-w-2xl mx-auto">
+                            <div className="text-center py-6 sm:py-8">
+                                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Get in Touch</h2>
+                                <p className="text-foreground-muted text-base sm:text-lg max-w-2xl mx-auto px-4">
                                     We'd love to hear from you! Whether you have questions, feedback, or need support,
                                     our team is here to help.
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                                 {/* Contact Information */}
-                                <div className="space-y-6">
+                                <div className="space-y-4 sm:space-y-6">
                                     <Card className="backdrop-blur-md bg-background/95 border-border/20">
                                         <CardHeader>
                                             <CardTitle>Contact Information</CardTitle>
                                         </CardHeader>
-                                        <CardContent className="space-y-6">
+                                        <CardContent className="space-y-4 sm:space-y-6">
                                             {contactInfo.map((info, index) => (
-                                                <div key={index} className="flex items-start space-x-4">
-                                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                                                <div key={index} className="flex items-start space-x-3 sm:space-x-4">
+                                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
                                                         {info.icon}
                                                     </div>
-                                                    <div>
-                                                        <h3 className="font-semibold text-lg">{info.title}</h3>
-                                                        <p className="text-primary font-medium">{info.details}</p>
-                                                        <p className="text-foreground-muted text-sm">{info.description}</p>
+                                                    <div className="min-w-0 flex-1">
+                                                        <h3 className="font-semibold text-base sm:text-lg">{info.title}</h3>
+                                                        <p className="text-primary font-medium text-sm sm:text-base break-all">{info.details}</p>
+                                                        <p className="text-foreground-muted text-xs sm:text-sm">{info.description}</p>
                                                     </div>
                                                 </div>
                                             ))}
@@ -155,22 +155,22 @@ const ContactUs = () => {
                                         <CardHeader>
                                             <CardTitle>Frequently Asked Questions</CardTitle>
                                         </CardHeader>
-                                        <CardContent className="space-y-4">
+                                        <CardContent className="space-y-3 sm:space-y-4">
                                             <div>
-                                                <h4 className="font-semibold mb-2">How do I cancel my subscription?</h4>
-                                                <p className="text-foreground-muted text-sm">
+                                                <h4 className="font-semibold mb-2 text-sm sm:text-base">How do I cancel my subscription?</h4>
+                                                <p className="text-foreground-muted text-xs sm:text-sm">
                                                     You can cancel your subscription anytime from your account settings or by contacting our support team.
                                                 </p>
                                             </div>
                                             <div>
-                                                <h4 className="font-semibold mb-2">Is there a free trial available?</h4>
-                                                <p className="text-foreground-muted text-sm">
+                                                <h4 className="font-semibold mb-2 text-sm sm:text-base">Is there a free trial available?</h4>
+                                                <p className="text-foreground-muted text-xs sm:text-sm">
                                                     Yes! We offer a 7-day free trial for new users. No credit card required.
                                                 </p>
                                             </div>
                                             <div>
-                                                <h4 className="font-semibold mb-2">Can I download content for offline viewing?</h4>
-                                                <p className="text-foreground-muted text-sm">
+                                                <h4 className="font-semibold mb-2 text-sm sm:text-base">Can I download content for offline viewing?</h4>
+                                                <p className="text-foreground-muted text-xs sm:text-sm">
                                                     Yes, you can download select content for offline viewing on our mobile apps.
                                                 </p>
                                             </div>
@@ -194,8 +194,8 @@ const ContactUs = () => {
                                                     </p>
                                                 </div>
                                             ) : (
-                                                <form onSubmit={handleSubmit} className="space-y-6">
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                                                    <div className="grid grid-cols-1 gap-4">
                                                         <div>
                                                             <label htmlFor="name" className="block text-sm font-medium mb-2">
                                                                 Full Name *
@@ -206,6 +206,7 @@ const ContactUs = () => {
                                                                 value={formData.name}
                                                                 onChange={handleInputChange}
                                                                 placeholder="Enter your full name"
+                                                                className="h-10 sm:h-11"
                                                                 required
                                                             />
                                                         </div>
@@ -220,6 +221,7 @@ const ContactUs = () => {
                                                                 value={formData.email}
                                                                 onChange={handleInputChange}
                                                                 placeholder="Enter your email"
+                                                                className="h-10 sm:h-11"
                                                                 required
                                                             />
                                                         </div>
@@ -235,6 +237,7 @@ const ContactUs = () => {
                                                             value={formData.subject}
                                                             onChange={handleInputChange}
                                                             placeholder="What's this about?"
+                                                            className="h-10 sm:h-11"
                                                             required
                                                         />
                                                     </div>
@@ -244,7 +247,7 @@ const ContactUs = () => {
                                                             Category
                                                         </label>
                                                         <Select value={formData.category} onValueChange={handleSelectChange}>
-                                                            <SelectTrigger>
+                                                            <SelectTrigger className="h-10 sm:h-11">
                                                                 <SelectValue placeholder="Select a category" />
                                                             </SelectTrigger>
                                                             <SelectContent>
@@ -268,12 +271,13 @@ const ContactUs = () => {
                                                             value={formData.message}
                                                             onChange={handleInputChange}
                                                             placeholder="Tell us how we can help you..."
-                                                            rows={6}
+                                                            rows={4}
+                                                            className="min-h-[100px] sm:min-h-[120px]"
                                                             required
                                                         />
                                                     </div>
 
-                                                    <Button type="submit" className="w-full" size="lg">
+                                                    <Button type="submit" className="w-full h-10 sm:h-11" size="lg">
                                                         <Send className="w-4 h-4 mr-2" />
                                                         Send Message
                                                     </Button>
@@ -286,20 +290,20 @@ const ContactUs = () => {
 
                             {/* Additional Information */}
                             <Card className="backdrop-blur-md bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-                                <CardContent className="p-8 text-center">
-                                    <h3 className="text-2xl font-bold mb-4">Need Immediate Help?</h3>
-                                    <p className="text-foreground-muted mb-6 max-w-2xl mx-auto">
+                                <CardContent className="p-6 sm:p-8 text-center">
+                                    <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">Need Immediate Help?</h3>
+                                    <p className="text-foreground-muted mb-4 sm:mb-6 max-w-2xl mx-auto text-sm sm:text-base">
                                         For urgent technical issues or account problems, please call our support hotline
                                         or use our live chat feature available 24/7.
                                     </p>
-                                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                        <Button size="lg" variant="outline" asChild>
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                                        <Button size="lg" variant="outline" asChild className="h-10 sm:h-11 text-sm sm:text-base">
                                             <a href="tel:+918282979209">
                                                 <Phone className="w-4 h-4 mr-2" />
                                                 Call Support
                                             </a>
                                         </Button>
-                                        <Button size="lg" asChild>
+                                        <Button size="lg" asChild className="h-10 sm:h-11 text-sm sm:text-base">
                                             <Link to="/">
                                                 <Mail className="w-4 h-4 mr-2" />
                                                 Live Chat

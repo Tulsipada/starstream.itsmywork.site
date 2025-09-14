@@ -55,7 +55,6 @@ const Navigation = () => {
             <div className="hidden md:flex items-center space-x-6">
               <Link to="/" className="nav-link">Home</Link>
               <Link to="/movies" className="nav-link">Movies</Link>
-              <Link to="/originals" className="nav-link">Originals</Link>
               <Link to="/prelaunch-offers" className="nav-link">Pre-Launch Offers</Link>
               <Link to="/watchlist" className="nav-link">Watchlist</Link>
               <Link to="/watch-history" className="nav-link">History</Link>
@@ -138,7 +137,6 @@ const Navigation = () => {
                 <div className="flex flex-col space-y-3">
                   <Link to="/" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
                   <Link to="/movies" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Movies</Link>
-                  <Link to="/originals" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Originals</Link>
                   <Link to="/prelaunch-offers" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Pre-Launch Offers</Link>
                   <Link to="/watchlist" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Watchlist</Link>
                   <Link to="/watch-history" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>History</Link>

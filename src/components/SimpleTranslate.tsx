@@ -40,7 +40,10 @@ const SimpleTranslate = () => {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
+                // Add a longer delay to allow for hover interactions
+                setTimeout(() => {
+                    setIsDropdownOpen(false);
+                }, 300);
             }
         };
 
@@ -52,7 +55,20 @@ const SimpleTranslate = () => {
 
     // Initialize Google Translate and check for stored language
     useEffect(() => {
-        // Initialize Google Translate
+        // Initialize Google Translate on every page
+        console.log('SimpleTranslate: Initializing Google Translate on page:', window.location.pathname);
+        console.log('SimpleTranslate: Current URL:', window.location.href);
+        
+        // Force re-initialization by clearing any existing elements
+        const existingElement = document.getElementById('google_translate_element');
+        if (existingElement) {
+            console.log('SimpleTranslate: Clearing existing translate element');
+            existingElement.innerHTML = '';
+        } else {
+            console.log('SimpleTranslate: No existing translate element found');
+        }
+        
+        console.log('SimpleTranslate: Calling initializeGoogleTranslate()');
         initializeGoogleTranslate();
 
         // Wait for initialization and then check for stored language
@@ -68,7 +84,12 @@ const SimpleTranslate = () => {
                 if (language) {
                     setCurrentLanguage(language);
                     localStorage.setItem('selectedLanguage', googtrans);
-                    console.log('Set current language from URL parameter:', language);
+                    console.log('Set current language from URL parameter and auto-translating:', language);
+                    
+                    // Auto-translate the page
+                    setTimeout(() => {
+                        triggerGoogleTranslate(googtrans);
+                    }, 1000);
                 }
             } else {
                 // Priority 2: Check localStorage
@@ -79,13 +100,18 @@ const SimpleTranslate = () => {
                         setCurrentLanguage(language);
                         console.log('Set current language from localStorage:', language);
 
-                        // Apply the saved language to Google Translate
+                        // Apply the saved language to Google Translate and auto-translate
                         setTimeout(() => {
                             const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
                             if (selectElement && selectElement.value !== savedLanguage) {
-                                console.log('Applying saved language from localStorage:', savedLanguage);
+                                console.log('Applying saved language from localStorage and auto-translating:', savedLanguage);
                                 selectElement.value = savedLanguage;
                                 selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+                                
+                                // Auto-translate the page
+                                setTimeout(() => {
+                                    triggerGoogleTranslate(savedLanguage);
+                                }, 1000);
                             }
                         }, 500);
                     }
@@ -97,13 +123,74 @@ const SimpleTranslate = () => {
                         if (language) {
                             setCurrentLanguage(language);
                             localStorage.setItem('selectedLanguage', cookieLanguage);
-                            console.log('Set current language from cookie:', language);
+                            console.log('Set current language from cookie and auto-translating:', language);
+                            
+                            // Auto-translate the page
+                            setTimeout(() => {
+                                triggerGoogleTranslate(cookieLanguage);
+                            }, 1000);
                         }
                     }
                 }
             }
         }, 2000);
     }, []);
+
+    // Re-initialize translator when page changes (for SPA navigation)
+    useEffect(() => {
+        const handlePageChange = () => {
+            console.log('Page changed, re-initializing translator');
+            setTimeout(() => {
+                // Clear existing element and re-initialize
+                const existingElement = document.getElementById('google_translate_element');
+                if (existingElement) {
+                    existingElement.innerHTML = '';
+                }
+                initializeGoogleTranslate();
+            }, 100);
+        };
+
+        // Listen for popstate events (back/forward navigation)
+        window.addEventListener('popstate', handlePageChange);
+        
+        // Also check periodically if translator is still working
+        const checkInterval = setInterval(() => {
+            const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+            console.log('SimpleTranslate: Periodic check - select element found:', !!selectElement, 'on page:', window.location.pathname);
+            
+            // Special handling for problematic pages
+            const problematicPages = ['/prelaunch-offers', '/contact'];
+            const isProblematicPage = problematicPages.includes(window.location.pathname);
+            
+            if (!selectElement && isInitialized) {
+                console.log('Translator select element missing, re-initializing on page:', window.location.pathname);
+                // Clear existing element and re-initialize
+                const existingElement = document.getElementById('google_translate_element');
+                if (existingElement) {
+                    existingElement.innerHTML = '';
+                }
+                
+                // For problematic pages, be more aggressive
+                if (isProblematicPage) {
+                    console.log('Problematic page detected, using aggressive re-initialization');
+                    // Force reload the script if needed
+                    if (!(window as any).google || !(window as any).google.translate) {
+                        const script = document.createElement('script');
+                        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                        script.async = true;
+                        document.head.appendChild(script);
+                    }
+                }
+                
+                initializeGoogleTranslate();
+            }
+        }, 2000); // Check more frequently for problematic pages
+
+        return () => {
+            window.removeEventListener('popstate', handlePageChange);
+            clearInterval(checkInterval);
+        };
+    }, [isInitialized]);
 
     // Monitor Google Translate status
     useEffect(() => {
@@ -117,7 +204,14 @@ const SimpleTranslate = () => {
                 const language = languages.find(lang => lang.code === status.currentValue);
                 if (language && language.code !== currentLanguage.code) {
                     setCurrentLanguage(language);
-                    console.log('Updated current language from select element:', language);
+                    console.log('Updated current language from select element and auto-translating:', language);
+                    
+                    // Auto-translate when language is detected from select element
+                    if (language.code !== 'en') {
+                        setTimeout(() => {
+                            triggerGoogleTranslate(language.code);
+                        }, 500);
+                    }
                 }
             }
         }, 1000);
@@ -154,6 +248,10 @@ const SimpleTranslate = () => {
         // Save to localStorage immediately
         localStorage.setItem('selectedLanguage', language.code);
         console.log('Saved language to localStorage:', language.code);
+        
+        // Immediately trigger auto-translation
+        console.log('Auto-translating page to:', language.code);
+        triggerGoogleTranslate(language.code);
 
         // SPECIAL HANDLING FOR ENGLISH - Force page reload immediately
         if (language.code === 'en') {
@@ -425,14 +523,53 @@ const SimpleTranslate = () => {
         }, 3000); // Wait 3 seconds to see if translation worked
     };
 
+    const handleReinitialize = () => {
+        console.log('Manually re-initializing translator on page:', window.location.pathname);
+        const existingElement = document.getElementById('google_translate_element');
+        if (existingElement) {
+            existingElement.innerHTML = '';
+        }
+        
+        // Force reload the Google Translate script if it's not working
+        if (!(window as any).google || !(window as any).google.translate) {
+            console.log('Google Translate script not loaded, reloading...');
+            const script = document.createElement('script');
+            script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            script.async = true;
+            document.head.appendChild(script);
+        }
+        
+        initializeGoogleTranslate();
+    };
+
     return (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative translator-container" ref={dropdownRef}
+             onMouseEnter={() => {
+                 console.log('Mouse entered translator area');
+                 setIsDropdownOpen(true);
+             }}
+             onMouseLeave={(e) => {
+                 // Only close if mouse is leaving the entire translator area
+                 const relatedTarget = e.relatedTarget as HTMLElement;
+                 if (!dropdownRef.current?.contains(relatedTarget)) {
+                     console.log('Mouse left translator area completely');
+                     setTimeout(() => {
+                         setIsDropdownOpen(false);
+                     }, 200);
+                 }
+             }}>
             <Button
                 variant="outline"
                 size="sm"
-                className={`flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''}`}
+                className={`translator-button flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''} ${isDropdownOpen ? 'bg-background/80' : ''}`}
                 disabled={!isInitialized || isTranslating}
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{
+                    position: 'relative',
+                    zIndex: 10001,
+                    opacity: 1,
+                    visibility: 'visible'
+                }}
             >
                 {isTranslating ? (
                     <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -449,7 +586,14 @@ const SimpleTranslate = () => {
             </Button>
             
             {isDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-56 max-h-80 overflow-y-auto bg-background/95 backdrop-blur-md border border-border/50 rounded-md shadow-lg z-[9999]">
+                <div className="translator-dropdown w-56 max-h-80 overflow-y-auto"
+                     style={{
+                         position: 'absolute',
+                         zIndex: 9999,
+                         top: '100%',
+                         left: 0,
+                         marginTop: '4px'
+                     }}>
                     {languages.map((language) => (
                         <button
                             key={language.code}

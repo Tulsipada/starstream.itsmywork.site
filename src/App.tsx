@@ -12,7 +12,6 @@ import TermsOfService from "./pages/TermsOfService";
 import WatchHistory from "./pages/WatchHistory";
 import Watchlist from "./pages/Watchlist";
 import Movies from "./pages/Movies";
-import Originals from "./pages/Originals";
 import ContactUs from "./pages/ContactUs";
 import PreLaunchOffers from "./pages/PreLaunchOffers";
 import NotFound from "./pages/NotFound";
@@ -35,7 +34,6 @@ const App = () => (
           <Route path="/watch-history" element={<WatchHistory />} />
           <Route path="/watchlist" element={<Watchlist />} />
           <Route path="/movies" element={<Movies />} />
-          <Route path="/originals" element={<Originals />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/prelaunch-offers" element={<PreLaunchOffers />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

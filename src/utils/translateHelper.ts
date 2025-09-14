@@ -317,20 +317,27 @@ export const checkGoogleTranslateStatus = () => {
 
 // Initialize Google Translate with better error handling
 export const initializeGoogleTranslate = (): void => {
-    console.log('Initializing Google Translate');
+    console.log('Initializing Google Translate on page:', window.location.pathname);
 
     // Ensure the container exists
     let container = document.getElementById('google_translate_element');
     if (!container) {
+        console.log('Creating new google_translate_element container');
         container = document.createElement('div');
         container.id = 'google_translate_element';
         document.body.appendChild(container);
+    } else {
+        console.log('Using existing google_translate_element container');
     }
 
     // Wait for Google Translate API
     const waitForAPI = () => {
+        console.log('Checking for Google Translate API on page:', window.location.pathname);
+        console.log('Google object exists:', !!(window as any).google);
+        console.log('Google translate exists:', !!(window as any).google?.translate);
+        
         if ((window as any).google && (window as any).google.translate) {
-            console.log('Google Translate API ready, creating element');
+            console.log('Google Translate API ready, creating element on page:', window.location.pathname);
 
             try {
                 new (window as any).google.translate.TranslateElement({
@@ -360,7 +367,7 @@ export const initializeGoogleTranslate = (): void => {
                 console.error('Error creating Google Translate element:', error);
             }
         } else {
-            console.log('Google Translate API not ready, retrying...');
+            console.log('Google Translate API not ready on page:', window.location.pathname, 'retrying...');
             setTimeout(waitForAPI, 100);
         }
     };

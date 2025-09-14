@@ -22,7 +22,6 @@ const Index = () => {
 
   const trendingMovies = getMoviesByCategory(categoriesData.trending);
   const popularMovies = getMoviesByCategory(categoriesData.popular);
-  const originalsMovies = getMoviesByCategory(categoriesData.originals);
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,7 +72,6 @@ const Index = () => {
 
           <VideoCarousel title="Trending Now" videos={trendingMovies} />
           <VideoCarousel title="Popular Movies" videos={popularMovies} />
-          <VideoCarousel title="Cinesaga Originals" videos={originalsMovies} />
         </div>
       </main>
 

@@ -1,80 +1,98 @@
 import { useEffect, useState } from "react";
 import { Languages } from "lucide-react";
+import { initializeGoogleTranslate } from "@/utils/translateHelper";
 
 const GoogleTranslate = () => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const [initAttempts, setInitAttempts] = useState(0);
+    const maxInitAttempts = 3;
 
     useEffect(() => {
         console.log('GoogleTranslate component mounted');
 
-        // Wait for Google Translate API to be available
-        const waitForGoogleTranslate = () => {
+        // Enhanced initialization with retry logic
+        const initializeWithRetry = () => {
+            if (initAttempts >= maxInitAttempts) {
+                console.log('Max initialization attempts reached');
+                return;
+            }
+            
+            setInitAttempts(prev => prev + 1);
+            
             if ((window as any).google && (window as any).google.translate) {
                 console.log('Google Translate API available, initializing...');
 
-                // Create the Google Translate element
-                const element = document.getElementById('google_translate_element');
-                if (element) {
-                    try {
-                        new (window as any).google.translate.TranslateElement({
-                            pageLanguage: 'en',
-                            includedLanguages: 'en,hi,gu,pa,mr,bn,or,as,bho,ta,te,ml,kn',
-                            layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-                            autoDisplay: false,
-                            multilanguagePage: true,
-                            gaTrack: false,
-                            gaId: null,
-                        }, 'google_translate_element');
-
-                        console.log('Google Translate element created successfully');
-
-                        // Wait a bit for the element to fully initialize, then hide it
-                        setTimeout(() => {
+                try {
+                    // Use the enhanced initialization
+                    initializeGoogleTranslate();
+                    
+                    // Wait for initialization to complete
+                    setTimeout(() => {
+                        const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
+                        if (selectElement) {
                             setIsLoaded(true);
-                            console.log('Google Translate element hidden after initialization');
-                        }, 2000);
-
-                        // Handle URL parameters
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const googtrans = urlParams.get('googtrans');
-
-                        if (googtrans) {
-                            console.log('Applying translation from URL parameter:', googtrans);
-                            setTimeout(() => {
-                                const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-                                if (selectElement) {
+                            console.log('Google Translate successfully initialized');
+                            
+                            // Handle URL parameters
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const googtrans = urlParams.get('googtrans');
+                            
+                            if (googtrans && googtrans !== 'en') {
+                                console.log('Applying translation from URL parameter:', googtrans);
+                                setTimeout(() => {
                                     selectElement.value = googtrans;
-                                    selectElement.dispatchEvent(new Event('change'));
+                                    const events = ['change', 'input'];
+                                    events.forEach(eventType => {
+                                        selectElement.dispatchEvent(new Event(eventType, { bubbles: true }));
+                                    });
                                     console.log('Translation applied from URL parameter');
-                                }
-                            }, 1000);
+                                }, 500);
+                            }
+                        } else {
+                            console.log('Select element not found after initialization, retrying...');
+                            setTimeout(initializeWithRetry, 1000);
                         }
-
-                    } catch (error) {
-                        console.error('Error creating Google Translate element:', error);
-                    }
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Error in Google Translate initialization:', error);
+                    setTimeout(initializeWithRetry, 1000);
                 }
             } else {
                 console.log('Google Translate API not ready yet, retrying...');
-                setTimeout(waitForGoogleTranslate, 100);
+                setTimeout(initializeWithRetry, 200);
             }
         };
 
-        waitForGoogleTranslate();
+        // Start initialization
+        initializeWithRetry();
 
-        // Hide Google Translate banner
+        // Enhanced banner hiding
         const hideBanner = () => {
-            const banner = document.querySelector('.goog-te-banner-frame');
-            if (banner) {
+            const banners = document.querySelectorAll('.goog-te-banner-frame, .VIpgJd-yAWNEb-L7lbkb');
+            banners.forEach(banner => {
                 (banner as HTMLElement).style.display = 'none';
+                (banner as HTMLElement).style.visibility = 'hidden';
+                (banner as HTMLElement).style.opacity = '0';
+            });
+            
+            // Reset body margin that Google Translate might add
+            if (document.body.style.marginTop) {
+                document.body.style.marginTop = '0';
             }
-            document.body.style.marginTop = '0';
         };
 
         const bannerInterval = setInterval(hideBanner, 100);
+        
+        // Clear interval after 10 seconds
+        setTimeout(() => {
+            clearInterval(bannerInterval);
+        }, 10000);
 
-        return () => clearInterval(bannerInterval);
-    }, []);
+        return () => {
+            clearInterval(bannerInterval);
+        };
+    }, [initAttempts]);
 
     return (
         <div className="relative">
@@ -98,9 +116,11 @@ const GoogleTranslate = () => {
 
             {/* Loading indicator */}
             {!isLoaded && (
-                <div className="flex items-center space-x-2 px-3 py-2 bg-background/50 border border-border/50 rounded-md">
+                <div className="flex items-center space-x-2 px-3 py-2 bg-background/50 border border-border/50 rounded-md animate-pulse">
                     <Languages className="w-4 h-4 animate-pulse" />
-                    <span className="text-sm text-muted-foreground">Loading Translate...</span>
+                    <span className="text-sm text-muted-foreground">
+                        Loading Translate... {initAttempts > 1 && `(${initAttempts}/${maxInitAttempts})`}
+                    </span>
                 </div>
             )}
         </div>

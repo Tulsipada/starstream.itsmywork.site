@@ -37,20 +37,54 @@
     <script type="text/javascript">
       function googleTranslateElementInit() {
         console.log("Google Translate script loaded successfully");
+        
+        try {
+          // Create the translate element with enhanced configuration
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi,gu,pa,mr,bn,or,as,bho,ta,te,ml,kn',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            multilanguagePage: true,
+            gaTrack: false,
+            gaId: null
+          }, 'google_translate_element');
+          
+          console.log('Google Translate element created in HTML callback');
+          
+          // Handle URL parameters if present
+          setTimeout(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const googtrans = urlParams.get("googtrans");
 
-        // Handle URL parameters if present
-        const urlParams = new URLSearchParams(window.location.search);
-        const googtrans = urlParams.get("googtrans");
-
-        if (googtrans) {
-          console.log("URL parameter detected:", googtrans);
-          // The React component will handle this
+            if (googtrans && googtrans !== 'en') {
+              console.log("URL parameter detected:", googtrans);
+              
+              // Wait for the select element to be available
+              const waitForSelect = () => {
+                const selectElement = document.querySelector('.goog-te-combo');
+                if (selectElement) {
+                  selectElement.value = googtrans;
+                  selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+                  console.log('Applied language from URL parameter');
+                } else {
+                  setTimeout(waitForSelect, 100);
+                }
+              };
+              
+              waitForSelect();
+            }
+          }, 1000);
+          
+        } catch (error) {
+          console.error('Error in googleTranslateElementInit:', error);
         }
       }
     </script>
     <script
       type="text/javascript"
       src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+      async
     ></script>
   </head>
 

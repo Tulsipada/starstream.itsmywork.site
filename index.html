@@ -1,25 +1,98 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/placeholder.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StarStream</title>
-    <meta name="description" content="StarStream - Your Ultimate Streaming Experience" />
-    <meta name="author" content="StarStream Team" />
+    <title>Cinesaga - Your Ultimate Entertainment Destination</title>
+    <meta
+      name="description"
+      content="Discover the best movies, shows, and entertainment content on Cinesaga. Your ultimate destination for streaming and entertainment."
+    />
+    <meta
+      name="keywords"
+      content="movies, shows, entertainment, streaming, cinesaga"
+    />
+    <meta name="author" content="Cinesaga" />
 
-    <meta property="og:title" content="StarStream" />
-    <meta property="og:description" content="StarStream - Your Ultimate Streaming Experience" />
-    <meta property="og:type" content="website" />
+    <!-- Open Graph Meta Tags -->
+    <meta
+      property="og:title"
+      content="Cinesaga - Your Ultimate Entertainment Destination"
+    />
+    <meta
+      property="og:description"
+      content="Discover the best movies, shows, and entertainment content on Cinesaga."
+    />
     <meta property="og:image" content="/placeholder.svg" />
+    <meta property="og:url" content="https://starstream.itsmywork.site" />
+    <meta property="og:type" content="website" />
 
+    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@starstream" />
+    <meta name="twitter:site" content="@cinesaga" />
     <meta name="twitter:image" content="/placeholder.svg" />
-    <script type="module" crossorigin src="/assets/index-CSGF5Jhj.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DwyoVuI0.css">
+
+    <!-- Google Translate Script - Simplified for utility integration -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        console.log("Google Translate script loaded successfully");
+        
+        try {
+          // Create the translate element with enhanced configuration
+          new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,hi,gu,pa,mr,bn,or,as,bho,ta,te,ml,kn',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            multilanguagePage: true,
+            gaTrack: false,
+            gaId: null
+          }, 'google_translate_element');
+          
+          console.log('Google Translate element created in HTML callback');
+          
+          // Handle URL parameters if present
+          setTimeout(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const googtrans = urlParams.get("googtrans");
+
+            if (googtrans && googtrans !== 'en') {
+              console.log("URL parameter detected:", googtrans);
+              
+              // Wait for the select element to be available
+              const waitForSelect = () => {
+                const selectElement = document.querySelector('.goog-te-combo');
+                if (selectElement) {
+                  selectElement.value = googtrans;
+                  selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+                  console.log('Applied language from URL parameter');
+                } else {
+                  setTimeout(waitForSelect, 100);
+                }
+              };
+              
+              waitForSelect();
+            }
+          }, 1000);
+          
+        } catch (error) {
+          console.error('Error in googleTranslateElementInit:', error);
+        }
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+      async
+    ></script>
+    <script type="module" crossorigin src="/assets/index-BfyjmmeP.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-1kqR4etN.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-vhV8IeWS.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Dy-iwDFB.css">
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>

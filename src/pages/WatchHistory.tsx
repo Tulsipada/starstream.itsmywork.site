@@ -26,7 +26,7 @@ const WatchHistory = () => {
             duration: "2h 15m",
             watchedAt: "2024-01-15T14:30:00Z",
             progress: 85,
-            thumbnail: "/src/assets/movies/movie1.jpg",
+            thumbnail: "/assets/movies/movie1.jpg",
             rating: 4.5,
             genre: "Fantasy",
             year: "2024"
@@ -38,7 +38,7 @@ const WatchHistory = () => {
             duration: "1h 45m",
             watchedAt: "2024-01-14T20:15:00Z",
             progress: 100,
-            thumbnail: "/src/assets/movies/movie2.jpg",
+            thumbnail: "/assets/movies/movie2.jpg",
             rating: 4.2,
             genre: "Sci-Fi",
             year: "2024"
@@ -50,7 +50,7 @@ const WatchHistory = () => {
             duration: "2h 30m",
             watchedAt: "2024-01-13T16:45:00Z",
             progress: 60,
-            thumbnail: "/src/assets/movies/movie3.jpg",
+            thumbnail: "/assets/movies/movie3.jpg",
             rating: 4.8,
             genre: "Action",
             year: "2024"
@@ -62,7 +62,7 @@ const WatchHistory = () => {
             duration: "1h 30m",
             watchedAt: "2024-01-12T22:00:00Z",
             progress: 100,
-            thumbnail: "/src/assets/movies/movie4.jpg",
+            thumbnail: "/assets/movies/movie4.jpg",
             rating: 3.9,
             genre: "Horror",
             year: "2024"
@@ -74,7 +74,7 @@ const WatchHistory = () => {
             duration: "1h 55m",
             watchedAt: "2024-01-11T19:30:00Z",
             progress: 100,
-            thumbnail: "/src/assets/movies/movie5.jpg",
+            thumbnail: "/assets/movies/movie5.jpg",
             rating: 4.1,
             genre: "Romance",
             year: "2024"

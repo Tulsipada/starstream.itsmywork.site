@@ -1,5 +1,17 @@
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin, Clock, Play, Apple } from "lucide-react";
+import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Clock, Play, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
+
+// Custom X (formerly Twitter) icon component
+const XIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 const Footer = () => {
   // Get current year dynamically
@@ -8,10 +20,10 @@ const Footer = () => {
   // No quick links - keeping footer minimal
 
   const socialLinks = [
-    { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/cinesaga.in" },
-    { name: "Twitter", icon: Twitter, href: "https://twitter.com/cinesaga" },
-    { name: "Instagram", icon: Instagram, href: "https://instagram.com/cinesaga" },
-    { name: "YouTube", icon: Youtube, href: "https://youtube.com/cinesaga" },
+    { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/cinesaga.in/" },
+    { name: "X", icon: XIcon, href: "https://x.com/cinesaga_in" },
+    { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/cinesaga_in/" },
+    { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/@cinesaga_in" },
   ];
 
   const contactInfo = [
@@ -93,39 +105,45 @@ const Footer = () => {
                 Get the Cinesaga app for the best experience
               </p>
               <div className="flex flex-col sm:flex-row justify-center md:justify-end space-y-3 sm:space-y-0 sm:space-x-3">
-                {/* Google Play Button */}
-                <a
-                  href="#"
-                  className="flex items-center justify-center bg-black text-white px-5 py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 group hover:scale-105 shadow-lg"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
-                      </svg>
-                    </div>
-                    <div className="text-left">
-                      <div className="text-xs text-gray-300 font-medium">GET IT ON</div>
-                      <div className="text-sm font-bold">Google Play</div>
+                {/* Google Play Button - Coming Soon */}
+                <div className="relative group">
+                  <div className="flex items-center justify-center bg-gray-400 text-white px-5 py-3 rounded-lg cursor-not-allowed opacity-75 shadow-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs text-gray-200 font-medium">GET IT ON</div>
+                        <div className="text-sm font-bold">Google Play</div>
+                      </div>
                     </div>
                   </div>
-                </a>
+                  {/* Coming Soon Badge */}
+                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                    Coming Soon
+                  </div>
+                </div>
 
-                {/* App Store Button */}
-                <a
-                  href="#"
-                  className="flex items-center justify-center bg-black text-white px-5 py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 group hover:scale-105 shadow-lg"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 flex items-center justify-center">
-                      <Apple className="w-6 h-6" />
-                    </div>
-                    <div className="text-left">
-                      <div className="text-xs text-gray-300 font-medium">Download on the</div>
-                      <div className="text-sm font-bold">App Store</div>
+                {/* App Store Button - Coming Soon */}
+                <div className="relative group">
+                  <div className="flex items-center justify-center bg-gray-400 text-white px-5 py-3 rounded-lg cursor-not-allowed opacity-75 shadow-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 flex items-center justify-center">
+                        <Apple className="w-6 h-6" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs text-gray-200 font-medium">Download on the</div>
+                        <div className="text-sm font-bold">App Store</div>
+                      </div>
                     </div>
                   </div>
-                </a>
+                  {/* Coming Soon Badge */}
+                  <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                    Coming Soon
+                  </div>
+                </div>
               </div>
             </div>
           </div>

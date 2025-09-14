@@ -417,6 +417,14 @@
     overflow: hidden;
   }
 
+  /* Ensure hero buttons are clickable */
+  .hero-section button,
+  .hero-section [role="button"] {
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 9999 !important;
+  }
+
   @media (max-width: 768px) {
     .hero-section {
       height: 100vh;

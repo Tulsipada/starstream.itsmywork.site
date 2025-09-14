@@ -7,26 +7,16 @@ import {
   VolumeX,
   Maximize,
   Minimize,
-  Settings,
   Plus,
   ThumbsUp,
   Share,
   SkipBack,
   SkipForward,
-  RotateCcw,
-  RotateCw,
-  Captions,
-  PictureInPicture,
   Loader2,
   MessageCircle,
   Send,
-  Heart,
-  MoreHorizontal,
-  Reply,
-  Flag,
-  Smile,
-  Image,
-  Video
+  Clock,
+  Star
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -68,12 +58,12 @@ const VideoPlayer = () => {
   const [showControls, setShowControls] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [showSettings, setShowSettings] = useState(false);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(95000);
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -134,7 +124,12 @@ const VideoPlayer = () => {
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const commentInputRef = useRef<HTMLTextAreaElement>(null);
 
+  console.log('VideoPlayer - ID from params:', id);
+  console.log('VideoPlayer - Available video data:', Object.keys(videoData));
+  console.log('VideoPlayer - Looking for video with ID:', id);
+  
   const video = id ? videoData[id] : null;
+  console.log('VideoPlayer - Found video:', video);
 
   // Auto-hide controls
   const hideControls = useCallback(() => {
@@ -215,6 +210,34 @@ const VideoPlayer = () => {
     }
   }, [isPlaying, showControls, hideControls]);
 
+
+  // Sync video element events with component state
+  useEffect(() => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (!videoElement) return;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleTimeUpdate = () => {
+      setCurrentTime(videoElement.currentTime);
+    };
+    const handleLoadedMetadata = () => {
+      setDuration(videoElement.duration);
+    };
+
+    videoElement.addEventListener('play', handlePlay);
+    videoElement.addEventListener('pause', handlePause);
+    videoElement.addEventListener('timeupdate', handleTimeUpdate);
+    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+    return () => {
+      videoElement.removeEventListener('play', handlePlay);
+      videoElement.removeEventListener('pause', handlePause);
+      videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, []);
+
   if (!video) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -240,26 +263,43 @@ const VideoPlayer = () => {
   };
 
   const togglePlay = useCallback(() => {
-    setIsLoading(true);
-    setTimeout(() => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      if (isPlaying) {
+        videoElement.pause();
+      } else {
+        videoElement.play();
+      }
+    }
       setIsPlaying(!isPlaying);
-      setIsLoading(false);
-    }, 300);
   }, [isPlaying]);
 
   const toggleMute = useCallback(() => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.muted = !isMuted;
+    }
     setIsMuted(!isMuted);
   }, [isMuted]);
 
   const skipTime = useCallback((seconds: number) => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.currentTime = Math.max(0, Math.min(videoElement.currentTime + seconds, videoElement.duration));
+    }
     setCurrentTime(prev => Math.max(0, Math.min(prev + seconds, duration)));
     showControlsTemporarily();
   }, [duration, showControlsTemporarily]);
 
   const adjustVolume = useCallback((delta: number) => {
-    setVolume(prev => Math.max(0, Math.min(100, prev + delta)));
+    const newVolume = Math.max(0, Math.min(100, volume + delta));
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.volume = newVolume / 100;
+    }
+    setVolume(newVolume);
     showControlsTemporarily();
-  }, [showControlsTemporarily]);
+  }, [volume, showControlsTemporarily]);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -278,11 +318,19 @@ const VideoPlayer = () => {
   }, []);
 
   const handleProgressChange = useCallback((value: number[]) => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.currentTime = value[0];
+    }
     setCurrentTime(value[0]);
     showControlsTemporarily();
   }, [showControlsTemporarily]);
 
   const handleVolumeChange = useCallback((value: number[]) => {
+    const videoElement = document.querySelector('video') as HTMLVideoElement;
+    if (videoElement) {
+      videoElement.volume = value[0] / 100;
+    }
     setVolume(value[0]);
     if (value[0] === 0) {
       setIsMuted(true);
@@ -291,10 +339,6 @@ const VideoPlayer = () => {
     }
   }, []);
 
-  const handlePlaybackRateChange = useCallback((rate: number) => {
-    setPlaybackRate(rate);
-    setShowSettings(false);
-  }, []);
 
   // Comment handling functions
   const handleAddComment = useCallback(() => {
@@ -340,15 +384,20 @@ const VideoPlayer = () => {
     }
   }, [handleAddComment]);
 
+  const handleLike = useCallback(() => {
+    setIsLiked(!isLiked);
+    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  }, [isLiked]);
+
   const formatCommentTime = useCallback((timestamp: string) => {
     return timestamp;
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Navigation />
 
-      {/* Video Player Section */}
+      {/* Modern Video Player Section */}
       <div className="pt-16 sm:pt-20">
         <div
           ref={videoRef}
@@ -358,57 +407,55 @@ const VideoPlayer = () => {
           onMouseLeave={() => setShowControls(false)}
           onClick={togglePlay}
         >
-          {/* Video Placeholder with enhanced design */}
-          <div className="w-full h-full bg-gradient-to-br from-background-secondary via-background-tertiary to-background flex items-center justify-center relative overflow-hidden">
-            {/* Background pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20"></div>
-              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
-            </div>
-
-            {/* Loading indicator */}
-            {isLoading && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-                <Loader2 className="w-8 h-8 text-primary animate-spin" />
-              </div>
-            )}
-
-            {/* Play/Pause button */}
-            <div className="text-center px-4 relative z-20">
-              <div className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center transition-all duration-300 ${isPlaying
-                ? 'bg-primary/30 backdrop-blur-sm border-2 border-primary/50'
-                : 'bg-primary/20 hover:bg-primary/30 backdrop-blur-sm border-2 border-primary/30 hover:border-primary/50'
-                }`}>
-                {isLoading ? (
-                  <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-primary animate-spin" />
-                ) : isPlaying ? (
-                  <Pause className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-primary" />
-                ) : (
-                  <Play className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-primary ml-1" fill="currentColor" />
-                )}
-              </div>
-              <p className="text-foreground-muted text-sm sm:text-base font-medium">
-                {isLoading ? "Loading..." : isPlaying ? "Playing" : "Click to Play"} - {video.title}
-              </p>
-            </div>
-
-            {/* Video thumbnail overlay */}
+          {/* Video Background with Thumbnail */}
+          <div className="w-full h-full relative overflow-hidden">
+            {/* Video thumbnail as background */}
             {video.thumbnail && (
               <div className="absolute inset-0">
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-full h-full object-cover opacity-20"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-black/40"></div>
+            </div>
+            )}
+
+            {/* Hidden Video Element */}
+            <video
+              className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
+              preload="metadata"
+              poster={video.thumbnail}
+            >
+              <source src={video.videoUrl || video.trailerUrl || ""} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
+                <div className="text-center">
+                  <Loader2 className="w-12 h-12 text-white animate-spin mx-auto mb-4" />
+                  <p className="text-white text-lg font-medium">Loading...</p>
+                </div>
               </div>
             )}
+
+            {/* Center Play Button - Large and Prominent */}
+            {!isPlaying && !isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <div className="text-center">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center hover:bg-white/30 hover:border-white/50 transition-all duration-300 hover:scale-110">
+                    <Play className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-white ml-1" fill="currentColor" />
+              </div>
+            </div>
           </div>
+            )}
 
           {/* Video Controls Overlay */}
-          <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-all duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent transition-all duration-300 ${showControls ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             {/* Top Controls */}
-            <div className="absolute top-0 left-0 right-0 p-3 sm:p-4 lg:p-6">
+              <div className="absolute top-0 left-0 right-0 p-4 lg:p-6">
               <div className="flex items-center justify-between">
                 {/* Back Button */}
                 <Button
@@ -430,17 +477,6 @@ const VideoPlayer = () => {
                     size="icon"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setShowSettings(!showSettings);
-                    }}
-                    className="bg-black/30 hover:bg-black/50 backdrop-blur-sm w-10 h-10 sm:w-12 sm:h-12 text-white hover:text-white"
-                  >
-                    <Settings className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
                       toggleFullscreen();
                     }}
                     className="bg-black/30 hover:bg-black/50 backdrop-blur-sm w-10 h-10 sm:w-12 sm:h-12 text-white hover:text-white"
@@ -455,29 +491,8 @@ const VideoPlayer = () => {
               </div>
             </div>
 
-            {/* Center Play Button (Large) */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  togglePlay();
-                }}
-                className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white hover:text-white transition-all duration-300 hover:scale-110"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 animate-spin" />
-                ) : isPlaying ? (
-                  <Pause className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" />
-                ) : (
-                  <Play className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 ml-1" fill="currentColor" />
-                )}
-              </Button>
-            </div>
-
             {/* Bottom Controls */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6 space-y-3 sm:space-y-4">
+              <div className="absolute bottom-0 left-0 right-0 p-4 lg:p-6 space-y-4">
               {/* Progress Bar */}
               <div className="space-y-2">
                 <Slider
@@ -487,7 +502,7 @@ const VideoPlayer = () => {
                   onValueChange={handleProgressChange}
                   className="w-full"
                 />
-                <div className="flex justify-between text-xs sm:text-sm text-white/80 font-medium">
+                  <div className="flex justify-between text-sm text-white/80 font-medium">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
@@ -495,7 +510,7 @@ const VideoPlayer = () => {
 
               {/* Control Buttons */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 sm:space-x-4">
+                  <div className="flex items-center space-x-4">
                   {/* Skip Back */}
                   <Button
                     variant="ghost"
@@ -504,9 +519,9 @@ const VideoPlayer = () => {
                       e.stopPropagation();
                       skipTime(-10);
                     }}
-                    className="w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20"
+                      className="w-10 h-10 text-white hover:text-white hover:bg-white/20"
                   >
-                    <SkipBack className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <SkipBack className="w-5 h-5" />
                   </Button>
 
                   {/* Play/Pause */}
@@ -517,12 +532,12 @@ const VideoPlayer = () => {
                       e.stopPropagation();
                       togglePlay();
                     }}
-                    className="w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20"
+                      className="w-10 h-10 text-white hover:text-white hover:bg-white/20"
                   >
                     {isPlaying ? (
-                      <Pause className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <Pause className="w-5 h-5" />
                     ) : (
-                      <Play className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" />
+                        <Play className="w-5 h-5" fill="currentColor" />
                     )}
                   </Button>
 
@@ -534,9 +549,9 @@ const VideoPlayer = () => {
                       e.stopPropagation();
                       skipTime(10);
                     }}
-                    className="w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20"
+                      className="w-10 h-10 text-white hover:text-white hover:bg-white/20"
                   >
-                    <SkipForward className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <SkipForward className="w-5 h-5" />
                   </Button>
 
                   {/* Volume Control */}
@@ -548,15 +563,15 @@ const VideoPlayer = () => {
                         e.stopPropagation();
                         toggleMute();
                       }}
-                      className="w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20"
+                        className="w-10 h-10 text-white hover:text-white hover:bg-white/20"
                     >
                       {isMuted || volume === 0 ? (
-                        <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <VolumeX className="w-5 h-5" />
                       ) : (
-                        <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <Volume2 className="w-5 h-5" />
                       )}
                     </Button>
-                    <div className="w-16 sm:w-20">
+                      <div className="w-20">
                       <Slider
                         value={[isMuted ? 0 : volume]}
                         max={100}
@@ -569,194 +584,127 @@ const VideoPlayer = () => {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  {/* Playback Speed */}
-                  <div className="relative">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowSettings(!showSettings);
-                      }}
-                      className="text-white hover:text-white hover:bg-white/20 text-xs sm:text-sm"
-                    >
-                      {playbackRate}x
-                    </Button>
-                  </div>
-
-                  {/* Comments Toggle */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowComments(!showComments);
-                    }}
-                    className={`w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20 ${showComments ? 'bg-white/20' : ''
-                      }`}
-                  >
-                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </Button>
-
-                  {/* Picture in Picture */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Picture in picture functionality would go here
-                    }}
-                    className="w-8 h-8 sm:w-10 sm:h-10 text-white hover:text-white hover:bg-white/20"
-                  >
-                    <PictureInPicture className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </Button>
                 </div>
               </div>
             </div>
 
-            {/* Settings Menu */}
-            {showSettings && (
-              <div className="absolute bottom-16 right-4 bg-black/90 backdrop-blur-sm rounded-lg p-4 min-w-48">
-                <div className="space-y-3">
-                  <h4 className="text-white font-medium text-sm mb-2">Playback Speed</h4>
-                  {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
-                    <button
-                      key={rate}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePlaybackRateChange(rate);
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded text-sm transition-colors ${playbackRate === rate
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-white hover:bg-white/20'
-                        }`}
-                    >
-                      {rate}x
-                    </button>
-                  ))}
-                </div>
               </div>
-            )}
           </div>
         </div>
 
-        {/* Video Information with Comments */}
-        <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+        {/* Modern Video Information Section */}
+        <div className="bg-black">
+          <div className="container mx-auto px-3 sm:px-4 py-8 sm:py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-12">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+              <div className="lg:col-span-2 space-y-8">
+                {/* Video Title and Info */}
+                <div className="space-y-6">
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
                   {video.title}
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-foreground-muted text-sm sm:text-base">
-                  <span className="bg-primary/20 text-primary px-3 py-1.5 rounded-full text-sm font-medium">
-                    {video.year}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    {video.duration}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                    {video.rating}
-                  </span>
-                  <span className="hidden sm:flex items-center gap-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    {video.genre}
-                  </span>
+                     {/* Action Buttons */}
+                     <div className="flex flex-wrap gap-4">
+                       <Button 
+                         onClick={togglePlay}
+                         className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 hover:scale-105 shadow-xl"
+                       >
+                         <Play className="w-5 h-5 mr-3" />
+                         Play Video
+                       </Button>
+                       <Button variant="outline" className="px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 hover:scale-105 border-2 border-white/30 text-white hover:bg-white/10">
+                         <Plus className="w-5 h-5 mr-3" />
+                       Add to Watchlist
+                     </Button>
+                       <Button 
+                         variant="outline" 
+                         onClick={handleLike}
+                         className={`px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 hover:scale-105 border-2 text-white hover:bg-white/10 ${
+                           isLiked 
+                             ? 'bg-red-500/20 border-red-500/50 text-red-400 hover:bg-red-500/30' 
+                             : 'border-white/30 hover:bg-white/10'
+                         }`}
+                       >
+                         <ThumbsUp className={`w-5 h-5 mr-3 ${isLiked ? 'fill-current' : ''}`} />
+                         {isLiked ? 'Liked' : 'Like'} ({likeCount.toLocaleString()})
+                       </Button>
+                     </div>
+
+                     <div className="flex flex-wrap items-center gap-4 text-white/80 text-lg">
+                       <div className="flex items-center gap-2">
+                         <Clock className="w-5 h-5" />
+                         <span className="font-medium">{video.duration}</span>
+                       </div>
+                       <span className="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium">
+                     {video.year}
+                   </span>
+                     </div>
+
+                     {/* Video Stats - Views, Likes, Comments */}
+                     <div className="flex flex-wrap items-center gap-6 text-white/80">
+                       <div className="flex items-center gap-2">
+                         <span className="text-2xl font-bold text-white">1.2M</span>
+                         <span className="text-lg">views</span>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <ThumbsUp className="w-5 h-5" />
+                         <span className="text-2xl font-bold text-white">{likeCount >= 1000 ? `${(likeCount / 1000).toFixed(1)}K` : likeCount.toLocaleString()}</span>
+                         <span className="text-lg">likes</span>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <MessageCircle className="w-5 h-5" />
+                         <span className="text-2xl font-bold text-white">24K</span>
+                         <span className="text-lg">comments</span>
+                       </div>
+                     </div>
                 </div>
 
-                <p className="text-base sm:text-lg text-foreground-muted leading-relaxed max-w-4xl">
+                  <p className="text-xl text-white/90 leading-relaxed max-w-4xl">
                   {video.description}
                 </p>
-
-                <div className="flex flex-wrap gap-3 sm:gap-4">
-                  <Button className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add to Watchlist
-                  </Button>
-                  <Button variant="outline" className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 border-2 hover:border-primary/50">
-                    <ThumbsUp className="w-4 h-4 mr-2" />
-                    Rate
-                  </Button>
-                  <Button variant="outline" className="px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105 border-2 hover:border-primary/50">
-                    <Share className="w-4 h-4 mr-2" />
-                    Share
-                  </Button>
-                </div>
               </div>
 
               {/* Cast and Crew */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                <div className="bg-card/50 backdrop-blur-sm p-6 rounded-xl border border-border/20">
-                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+                    <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                      <div className="w-2 h-8 bg-white rounded-full"></div>
                     Cast
                   </h3>
-                  <p className="text-foreground-muted text-sm sm:text-base leading-relaxed">{video.cast}</p>
+                    <p className="text-white/90 text-lg leading-relaxed">{video.cast}</p>
                 </div>
-                <div className="bg-card/50 backdrop-blur-sm p-6 rounded-xl border border-border/20">
-                  <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <div className="w-1 h-6 bg-primary rounded-full"></div>
+                  <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20">
+                    <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                      <div className="w-2 h-8 bg-white rounded-full"></div>
                     Director
                   </h3>
-                  <p className="text-foreground-muted text-sm sm:text-base leading-relaxed">{video.director}</p>
+                    <p className="text-white/90 text-lg leading-relaxed">{video.director}</p>
                 </div>
               </div>
 
-              {/* Video Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-primary mb-1">4.8</div>
-                  <div className="text-xs text-foreground-muted">Rating</div>
-                </div>
-                <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-blue-500 mb-1">1.2M</div>
-                  <div className="text-xs text-foreground-muted">Views</div>
-                </div>
-                <div className="bg-gradient-to-br from-green-500/10 to-green-500/5 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-green-500 mb-1">95%</div>
-                  <div className="text-xs text-foreground-muted">Liked</div>
-                </div>
-                <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-purple-500 mb-1">24K</div>
-                  <div className="text-xs text-foreground-muted">Comments</div>
-                </div>
-              </div>
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-6">
+              <div className="space-y-8">
               {/* Comments Section */}
-              <div className="bg-card/50 backdrop-blur-sm rounded-xl border border-border/20">
-                <div className="p-4 border-b border-border/20">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                      <MessageCircle className="w-5 h-5 text-primary" />
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                   <div className="p-6 border-b border-white/20">
+                     <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                       <MessageCircle className="w-6 h-6 text-white" />
                       Comments ({comments.length})
                     </h3>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowComments(!showComments)}
-                      className="text-foreground-muted hover:text-foreground"
-                    >
-                      {showComments ? <MoreHorizontal className="w-4 h-4" /> : <MessageCircle className="w-4 h-4" />}
-                    </Button>
-                  </div>
                 </div>
 
-                {showComments ? (
-                  <div className="p-4 space-y-4">
+                <div className="p-6 space-y-6">
                     {/* Add Comment Form */}
-                    <div className="p-3 bg-background/50 rounded-lg border border-border/20">
-                      <div className="flex gap-2">
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/20">
+                    <div className="flex gap-3">
                         <img
-                          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=32&h=32&fit=crop&crop=face"
+                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face"
                           alt="Your avatar"
-                          className="w-8 h-8 rounded-full object-cover"
+                        className="w-10 h-10 rounded-full object-cover"
                         />
                         <div className="flex-1">
                           <textarea
@@ -765,17 +713,17 @@ const VideoPlayer = () => {
                             onChange={(e) => setNewComment(e.target.value)}
                             onKeyPress={handleKeyPress}
                             placeholder="Add a comment..."
-                            className="w-full p-2 bg-background border border-border/20 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent text-foreground placeholder:text-foreground-muted text-sm"
-                            rows={2}
+                          className="w-full p-3 bg-white/10 border border-white/20 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent text-white placeholder:text-white/60 text-sm"
+                          rows={3}
                           />
-                          <div className="flex justify-end items-center mt-1">
+                        <div className="flex justify-end items-center mt-2">
                             <Button
                               onClick={handleAddComment}
                               disabled={!newComment.trim()}
                               size="sm"
-                              className="bg-primary hover:bg-primary/90 text-white px-3 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-white text-black hover:bg-white/90 px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <Send className="w-3 h-3 mr-1" />
+                            <Send className="w-4 h-4 mr-2" />
                               Post
                             </Button>
                           </div>
@@ -784,20 +732,20 @@ const VideoPlayer = () => {
                     </div>
 
                     {/* Comments List */}
-                    <div className="space-y-3 max-h-80 overflow-y-auto">
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
                       {comments.slice(0, 5).map((comment) => (
-                        <div key={comment.id} className="flex gap-2 p-3 bg-background/30 rounded-lg hover:bg-background/50 transition-colors">
+                      <div key={comment.id} className="flex gap-3 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
                           <img
                             src={comment.avatar}
                             alt={comment.user}
-                            className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                          className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1 mb-1">
-                              <span className="font-medium text-foreground text-xs">{comment.user}</span>
-                              <span className="text-xs text-foreground-muted">{comment.timestamp}</span>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-semibold text-white text-sm">{comment.user}</span>
+                            <span className="text-xs text-white/60">{comment.timestamp}</span>
                             </div>
-                            <p className="text-foreground text-xs leading-relaxed">{comment.text}</p>
+                          <p className="text-white/90 text-sm leading-relaxed">{comment.text}</p>
                           </div>
                         </div>
                       ))}
@@ -805,33 +753,15 @@ const VideoPlayer = () => {
 
                     {/* View All Comments */}
                     {comments.length > 5 && (
-                      <div className="text-center pt-2">
-                        <Button variant="outline" size="sm" className="text-xs">
+                    <div className="text-center pt-4">
+                      <Button variant="outline" size="sm" className="text-sm border-white/30 text-white hover:bg-white/10">
                           View All Comments ({comments.length})
                         </Button>
                       </div>
                     )}
                   </div>
-                ) : (
-                  <div className="p-4 text-center">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <MessageCircle className="w-6 h-6 text-primary" />
-                    </div>
-                    <p className="text-foreground-muted text-sm mb-2">
-                      {comments.length} comments
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setShowComments(true)}
-                      className="text-xs"
-                    >
-                      View Comments
-                    </Button>
                   </div>
-                )}
               </div>
-
             </div>
           </div>
         </div>

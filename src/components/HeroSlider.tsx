@@ -29,6 +29,8 @@ const HeroSlider = () => {
   };
 
   const handleWatchNow = (heroId: string) => {
+    console.log('Hero button clicked, navigating to:', `/watch/${heroId}`);
+    console.log('Hero data:', heroesData.find(h => h.id === heroId));
     navigate(`/watch/${heroId}`);
   };
 
@@ -39,13 +41,13 @@ const HeroSlider = () => {
       {/* Hero Slides */}
       <div className="relative w-full h-full">
         {heroesData.map((hero, index) => (
-          <div
-            key={hero.id}
-            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide
-              ? 'opacity-100 scale-100'
-              : 'opacity-0 scale-105'
-              }`}
-          >
+           <div
+             key={hero.id}
+             className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide
+               ? 'opacity-100 scale-100 z-10'
+               : 'opacity-0 scale-105 z-0'
+               }`}
+           >
             {/* Background Image */}
             <div className="absolute inset-0 hero-bg-image">
               <img
@@ -65,10 +67,10 @@ const HeroSlider = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/20" />
 
-            {/* Content */}
-            <div className="relative z-10 flex items-center h-full">
-              <div className="container mx-auto px-3 sm:px-4">
-                <div className="max-w-2xl space-y-4 sm:space-y-6 animate-fade-in">
+             {/* Content */}
+             <div className="relative z-20 flex items-center h-full">
+               <div className="container mx-auto px-3 sm:px-4">
+                 <div className="max-w-2xl space-y-4 sm:space-y-6 animate-fade-in relative z-30">
                   <div className="space-y-2">
                     <p className="text-accent font-medium text-sm sm:text-lg tracking-wide uppercase">
                       {hero.subtitle}
@@ -98,19 +100,27 @@ const HeroSlider = () => {
                     {hero.description}
                   </p>
 
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                    <Button
-                      size="lg"
-                      onClick={() => handleWatchNow(hero.id)}
-                      className="bg-primary hover:bg-primary-dark text-primary-foreground px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold"
-                    >
-                      <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" fill="currentColor" />
-                      Watch Now
-                    </Button>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 relative z-40">
+                     <Button
+                       size="lg"
+                       onClick={(e) => {
+                         e.preventDefault();
+                         e.stopPropagation();
+                         console.log('Watch Now button clicked!');
+                         handleWatchNow(hero.id);
+                       }}
+                       className="bg-primary hover:bg-primary-dark text-primary-foreground px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold relative z-50"
+                       style={{ pointerEvents: 'auto' }}
+                     >
+                       <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" fill="currentColor" />
+                       Watch Now
+                     </Button>
                     <Button
                       variant="secondary"
                       size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold"
+                      onClick={() => handleWatchNow(hero.id)}
+                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold relative z-50"
+                      style={{ pointerEvents: 'auto' }}
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                       Add to Watchlist
@@ -118,7 +128,9 @@ const HeroSlider = () => {
                     <Button
                       variant="ghost"
                       size="lg"
-                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold border border-white/20 hover:bg-white/10"
+                      onClick={() => handleWatchNow(hero.id)}
+                      className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold border border-white/20 hover:bg-white/10 relative z-50"
+                      style={{ pointerEvents: 'auto' }}
                     >
                       <Info className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
                       More Info

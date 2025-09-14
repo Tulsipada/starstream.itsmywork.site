@@ -139,6 +139,7 @@ const MobileHeroSection = () => {
                                         <Button
                                             variant="secondary"
                                             size="sm"
+                                            onClick={() => handleWatchNow(hero.id)}
                                             className="px-4 py-3 text-sm font-semibold rounded-lg flex-shrink-0"
                                         >
                                             <Plus className="w-4 h-4" />

@@ -82,9 +82,13 @@ const MobileHeroSection = () => {
                             <img
                                 src={hero.backgroundImage}
                                 alt={hero.title}
-                                className="w-full h-full object-cover mobile-hero-image"
+                                className="w-full h-full object-contain object-center mobile-hero-image"
                                 style={{
                                     minHeight: '24rem', // h-96 equivalent
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'contain',
+                                    objectPosition: 'center'
                                 }}
                             />
                         </div>

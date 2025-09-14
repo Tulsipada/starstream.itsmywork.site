@@ -59,17 +59,47 @@ const SimpleTranslate = () => {
         console.log('SimpleTranslate: Initializing Google Translate on page:', window.location.pathname);
         console.log('SimpleTranslate: Current URL:', window.location.href);
         
-        // Force re-initialization by clearing any existing elements
-        const existingElement = document.getElementById('google_translate_element');
-        if (existingElement) {
-            console.log('SimpleTranslate: Clearing existing translate element');
-            existingElement.innerHTML = '';
+        // Special handling for home page - ensure Google Translate script is loaded
+        if (window.location.pathname === '/') {
+            console.log('SimpleTranslate: Home page detected, ensuring Google Translate script is loaded');
+            
+            // Check if Google Translate script is loaded
+            if (!(window as any).google || !(window as any).google.translate) {
+                console.log('SimpleTranslate: Google Translate script not loaded on home page, loading it');
+                
+                // Load the Google Translate script
+                const script = document.createElement('script');
+                script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.async = true;
+                script.onload = () => {
+                    console.log('SimpleTranslate: Google Translate script loaded on home page');
+                    // Wait a bit for the script to initialize
+                    setTimeout(() => {
+                        initializeGoogleTranslate();
+                    }, 500);
+                };
+                script.onerror = () => {
+                    console.error('SimpleTranslate: Failed to load Google Translate script on home page');
+                };
+                document.head.appendChild(script);
+            } else {
+                console.log('SimpleTranslate: Google Translate script already loaded on home page');
+                initializeGoogleTranslate();
+            }
         } else {
-            console.log('SimpleTranslate: No existing translate element found');
+            // For other pages, use the normal initialization
+            // Force re-initialization by clearing any existing elements
+            const existingElement = document.getElementById('google_translate_element');
+            if (existingElement) {
+                console.log('SimpleTranslate: Clearing existing translate element');
+                existingElement.innerHTML = '';
+            } else {
+                console.log('SimpleTranslate: No existing translate element found');
+            }
+            
+            console.log('SimpleTranslate: Calling initializeGoogleTranslate()');
+            initializeGoogleTranslate();
         }
-        
-        console.log('SimpleTranslate: Calling initializeGoogleTranslate()');
-        initializeGoogleTranslate();
 
         // Wait for initialization and then check for stored language
         setTimeout(() => {
@@ -159,8 +189,9 @@ const SimpleTranslate = () => {
             console.log('SimpleTranslate: Periodic check - select element found:', !!selectElement, 'on page:', window.location.pathname);
             
             // Special handling for problematic pages
-            const problematicPages = ['/prelaunch-offers', '/contact'];
+            const problematicPages = ['/prelaunch-offers', '/contact', '/'];
             const isProblematicPage = problematicPages.includes(window.location.pathname);
+            const isHomePage = window.location.pathname === '/';
             
             if (!selectElement && isInitialized) {
                 console.log('Translator select element missing, re-initializing on page:', window.location.pathname);
@@ -175,14 +206,56 @@ const SimpleTranslate = () => {
                     console.log('Problematic page detected, using aggressive re-initialization');
                     // Force reload the script if needed
                     if (!(window as any).google || !(window as any).google.translate) {
+                        console.log('Google Translate script missing, reloading...');
                         const script = document.createElement('script');
                         script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
                         script.async = true;
+                        script.onload = () => {
+                            console.log('Google Translate script reloaded successfully');
+                            setTimeout(() => {
+                                initializeGoogleTranslate();
+                            }, 500);
+                        };
                         document.head.appendChild(script);
+                    } else {
+                        initializeGoogleTranslate();
                     }
                 }
                 
-                initializeGoogleTranslate();
+                // Extra aggressive handling for home page
+                if (isHomePage) {
+                    console.log('Home page detected, using extra aggressive re-initialization');
+                    
+                    // Force clear all Google Translate state
+                    document.body.classList.remove('translated-ltr', 'translated-rtl');
+                    
+                    // Clear any existing Google Translate elements
+                    const allGoogleElements = document.querySelectorAll('[id*="google_translate"], [class*="goog-te"]');
+                    allGoogleElements.forEach(element => {
+                        if (element.id !== 'google_translate_element') {
+                            element.remove();
+                        }
+                    });
+                    
+                    // Force reload the script
+                    if (!(window as any).google || !(window as any).google.translate) {
+                        console.log('Google Translate script missing on home page, reloading...');
+                        const script = document.createElement('script');
+                        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                        script.async = true;
+                        script.onload = () => {
+                            console.log('Google Translate script reloaded on home page');
+                            setTimeout(() => {
+                                initializeGoogleTranslate();
+                            }, 1000);
+                        };
+                        document.head.appendChild(script);
+                    } else {
+                        setTimeout(() => {
+                            initializeGoogleTranslate();
+                        }, 500);
+                    }
+                }
             }
         }, 2000); // Check more frequently for problematic pages
 
@@ -536,10 +609,16 @@ const SimpleTranslate = () => {
             const script = document.createElement('script');
             script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
             script.async = true;
+            script.onload = () => {
+                console.log('Google Translate script reloaded manually');
+                setTimeout(() => {
+                    initializeGoogleTranslate();
+                }, 500);
+            };
             document.head.appendChild(script);
+        } else {
+            initializeGoogleTranslate();
         }
-        
-        initializeGoogleTranslate();
     };
 
     return (
@@ -558,32 +637,47 @@ const SimpleTranslate = () => {
                      }, 200);
                  }
              }}>
-            <Button
-                variant="outline"
-                size="sm"
-                className={`translator-button flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''} ${isDropdownOpen ? 'bg-background/80' : ''}`}
-                disabled={!isInitialized || isTranslating}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                style={{
-                    position: 'relative',
-                    zIndex: 10001,
-                    opacity: 1,
-                    visibility: 'visible'
-                }}
-            >
-                {isTranslating ? (
-                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                ) : (
-                    <Languages className="w-4 h-4" />
+            <div className="flex items-center space-x-2">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className={`translator-button flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''} ${isDropdownOpen ? 'bg-background/80' : ''}`}
+                    disabled={!isInitialized || isTranslating}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    style={{
+                        position: 'relative',
+                        zIndex: 10001,
+                        opacity: 1,
+                        visibility: 'visible'
+                    }}
+                >
+                    {isTranslating ? (
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                        <Languages className="w-4 h-4" />
+                    )}
+                    <span className="hidden sm:inline">
+                        {isTranslating ? 'Translating...' : currentLanguage.nativeName}
+                    </span>
+                    <span className="sm:hidden">
+                        {isTranslating ? '...' : currentLanguage.code.toUpperCase()}
+                    </span>
+                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isTranslating ? 'opacity-50' : ''}`} />
+                </Button>
+                
+                {/* Debug button for home page */}
+                {window.location.pathname === '/' && !isInitialized && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleReinitialize}
+                        className="text-xs px-2 py-1 h-6"
+                        title="Re-initialize translator"
+                    >
+                        🔄
+                    </Button>
                 )}
-                <span className="hidden sm:inline">
-                    {isTranslating ? 'Translating...' : currentLanguage.nativeName}
-                </span>
-                <span className="sm:hidden">
-                    {isTranslating ? '...' : currentLanguage.code.toUpperCase()}
-                </span>
-                <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isTranslating ? 'opacity-50' : ''}`} />
-            </Button>
+            </div>
             
             {isDropdownOpen && (
                 <div className="translator-dropdown w-56 max-h-80 overflow-y-auto"
@@ -620,3 +714,4 @@ const SimpleTranslate = () => {
 };
 
 export default SimpleTranslate;
+

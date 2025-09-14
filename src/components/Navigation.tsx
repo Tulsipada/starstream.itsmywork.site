@@ -71,8 +71,8 @@ const Navigation = () => {
               <Search className="w-4 h-4" />
             </Button>
 
-            {/* Google Translate - Hidden, only for functionality */}
-            <div className="hidden">
+            {/* Google Translate - Initially visible for proper initialization */}
+            <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', opacity: 0, pointerEvents: 'none', visibility: 'hidden' }}>
               <GoogleTranslate />
             </div>
 
@@ -134,8 +134,8 @@ const Navigation = () => {
                   <Link to="/contact" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
                 </div>
 
-                {/* Mobile Google Translate - Hidden, only for functionality */}
-                <div className="hidden">
+                {/* Mobile Google Translate - Initially visible for proper initialization */}
+                <div style={{ position: 'absolute', top: '-9999px', left: '-9999px', opacity: 0, pointerEvents: 'none', visibility: 'hidden' }}>
                   <GoogleTranslate />
                 </div>
 

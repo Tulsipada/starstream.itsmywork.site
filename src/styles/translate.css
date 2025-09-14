@@ -190,6 +190,30 @@ body {
   visibility: visible !important;
   opacity: 1 !important;
   z-index: 1000 !important;
+  height: auto !important;
+  width: auto !important;
+  overflow: visible !important;
+}
+
+/* Ensure Google Translate widget elements are visible during initialization */
+.goog-te-gadget {
+  display: block !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.goog-te-gadget-simple {
+  display: block !important;
+  position: relative !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.goog-te-combo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Hide the Google Translate widget when it should be hidden */

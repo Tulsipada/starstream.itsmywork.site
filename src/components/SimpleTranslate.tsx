@@ -56,6 +56,7 @@ const SimpleTranslate = () => {
         console.log('Google Translate status:', status);
 
         // Try to trigger Google Translate
+        console.log('Attempting to trigger translation for:', language.code);
         const success = triggerGoogleTranslate(language.code);
 
         if (!success) {
@@ -63,6 +64,7 @@ const SimpleTranslate = () => {
             // Use page reload method as fallback
             const currentUrl = new URL(window.location.href);
             currentUrl.searchParams.set('googtrans', language.code);
+            console.log('Reloading page with URL:', currentUrl.toString());
             window.location.href = currentUrl.toString();
         }
     };

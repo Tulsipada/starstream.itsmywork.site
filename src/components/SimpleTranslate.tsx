@@ -1,13 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Languages, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { triggerGoogleTranslate, checkGoogleTranslateStatus, initializeGoogleTranslate } from "@/utils/translateHelper";
+import { useDropdownPreventShake } from "@/hooks/use-dropdown-prevent-shake";
 
 interface Language {
     code: string;
@@ -35,6 +30,25 @@ const SimpleTranslate = () => {
     const [currentLanguage, setCurrentLanguage] = useState<Language>(languages[0]);
     const [isInitialized, setIsInitialized] = useState(false);
     const [isTranslating, setIsTranslating] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Prevent page shaking when dropdown is open
+    useDropdownPreventShake(isDropdownOpen);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     // Initialize Google Translate and check for stored language
     useEffect(() => {
@@ -412,48 +426,52 @@ const SimpleTranslate = () => {
     };
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className={`flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''}`}
-                    disabled={!isInitialized || isTranslating}
-                >
-                    {isTranslating ? (
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                        <Languages className="w-4 h-4" />
-                    )}
-                    <span className="hidden sm:inline">
-                        {isTranslating ? 'Translating...' : currentLanguage.nativeName}
-                    </span>
-                    <span className="sm:hidden">
-                        {isTranslating ? '...' : currentLanguage.code.toUpperCase()}
-                    </span>
-                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isTranslating ? 'opacity-50' : ''}`} />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 max-h-80 overflow-y-auto">
-                {languages.map((language) => (
-                    <DropdownMenuItem
-                        key={language.code}
-                        onClick={() => handleLanguageChange(language)}
-                        className={`flex items-center justify-between cursor-pointer hover:bg-accent/50 ${currentLanguage.code === language.code ? "bg-primary/10 text-primary" : ""
-                            }`}
-                        disabled={!isInitialized || isTranslating}
-                    >
-                        <div className="flex flex-col">
-                            <span className="font-medium">{language.nativeName}</span>
-                            <span className="text-xs text-muted-foreground">{language.name}</span>
-                        </div>
-                        {currentLanguage.code === language.code && (
-                            <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        )}
-                    </DropdownMenuItem>
-                ))}
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="relative" ref={dropdownRef}>
+            <Button
+                variant="outline"
+                size="sm"
+                className={`flex items-center space-x-2 bg-background/50 border-border/50 hover:bg-background/80 transition-all duration-200 ${!isInitialized || isTranslating ? 'opacity-50' : ''}`}
+                disabled={!isInitialized || isTranslating}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+                {isTranslating ? (
+                    <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                ) : (
+                    <Languages className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">
+                    {isTranslating ? 'Translating...' : currentLanguage.nativeName}
+                </span>
+                <span className="sm:hidden">
+                    {isTranslating ? '...' : currentLanguage.code.toUpperCase()}
+                </span>
+                <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isTranslating ? 'opacity-50' : ''}`} />
+            </Button>
+            
+            {isDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-56 max-h-80 overflow-y-auto bg-background/95 backdrop-blur-md border border-border/50 rounded-md shadow-lg z-[9999]">
+                    {languages.map((language) => (
+                        <button
+                            key={language.code}
+                            className={`w-full px-3 py-2 text-left hover:bg-accent/50 flex items-center justify-between ${currentLanguage.code === language.code ? "bg-primary/10 text-primary" : ""}`}
+                            onClick={() => {
+                                handleLanguageChange(language);
+                                setIsDropdownOpen(false);
+                            }}
+                            disabled={!isInitialized || isTranslating}
+                        >
+                            <div className="flex flex-col">
+                                <span className="font-medium">{language.nativeName}</span>
+                                <span className="text-xs text-muted-foreground">{language.name}</span>
+                            </div>
+                            {currentLanguage.code === language.code && (
+                                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                            )}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 };
 

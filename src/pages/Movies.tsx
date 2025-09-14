@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Search, Play, Plus, Filter, Calendar, Star, Heart, Bookmark } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moviesData from "@/data/movies.json";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useMobileDetection } from "@/hooks/use-mobile-detection";
 
@@ -18,6 +19,25 @@ const Movies = () => {
     const [sortBy, setSortBy] = useState("popular");
     const [filterBy, setFilterBy] = useState("all");
     const [yearFilter, setYearFilter] = useState("all");
+
+    const sortOptions = [
+        { value: "popular", label: "Most Popular" },
+        { value: "title", label: "Title A-Z" },
+        { value: "year", label: "Newest First" },
+        { value: "rating", label: "Highest Rated" }
+    ];
+
+    const genreOptions = [
+        { value: "all", label: "All Genres" },
+        { value: "fantasy", label: "Fantasy" },
+        { value: "sci-fi", label: "Sci-Fi" },
+        { value: "action", label: "Action" },
+        { value: "horror", label: "Horror" },
+        { value: "romance", label: "Romance" },
+        { value: "comedy", label: "Comedy" },
+        { value: "drama", label: "Drama" }
+    ];
+
 
     // Get all movies from the data
     const allMovies = moviesData;
@@ -32,13 +52,13 @@ const Movies = () => {
         .sort((a, b) => {
             switch (sortBy) {
                 case "popular":
-                    return b.rating - a.rating;
+                    return a.title.localeCompare(b.title); // Sort by title for now
                 case "title":
                     return a.title.localeCompare(b.title);
                 case "year":
                     return parseInt(b.year) - parseInt(a.year);
                 case "rating":
-                    return b.rating - a.rating;
+                    return a.title.localeCompare(b.title); // Sort by title for now
                 default:
                     return 0;
             }
@@ -56,6 +76,11 @@ const Movies = () => {
 
     // Get unique years for year filter
     const years = [...new Set(allMovies.map(movie => movie.year))].sort((a, b) => parseInt(b) - parseInt(a));
+    
+    const yearOptions = [
+        { value: "all", label: "All Years" },
+        ...years.map(year => ({ value: year, label: year }))
+    ];
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
@@ -65,45 +90,14 @@ const Movies = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
             </div>
 
-            <div className="relative">
-                {/* Header */}
-                <div className="bg-background/95 backdrop-blur-md border-b border-border/20 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => navigate(-1)}
-                                    className="text-foreground-muted hover:text-foreground"
-                                >
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <h1 className="text-xl font-bold">Movies</h1>
-                            </div>
-                            <Link to="/" className="text-lg font-bold text-primary">
-                                Cinesaga
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+            <Navigation />
 
-                {/* Content */}
+            {/* Content */}
+            <div className="pt-20 sm:pt-24">
                 <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-                    <div className="space-y-6 sm:space-y-8">
-                        {/* Hero Section */}
-                        <div className="text-center py-6 sm:py-8">
-                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">Discover Amazing Movies</h2>
-                            <p className="text-foreground-muted text-base sm:text-lg max-w-2xl mx-auto px-4">
-                                Explore our vast collection of movies from every genre. From blockbusters to indie films,
-                                find your next favorite movie.
-                            </p>
-                        </div>
-
+                    <div className="space-y-8 sm:space-y-10">
                         {/* Filters and Search */}
-                        <Card className="backdrop-blur-md bg-background/95 border-border/20">
+                        <Card className="backdrop-blur-md bg-background/95 border-border/20 relative filter-section mb-8">
                             <CardContent className="p-3 sm:p-4">
                                 <div className="flex flex-col gap-3 sm:gap-4">
                                     <div className="flex-1">
@@ -118,45 +112,29 @@ const Movies = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap gap-2 sm:gap-3">
-                                        <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
-                                                <SelectValue placeholder="Sort by" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="popular">Most Popular</SelectItem>
-                                                <SelectItem value="title">Title A-Z</SelectItem>
-                                                <SelectItem value="year">Newest First</SelectItem>
-                                                <SelectItem value="rating">Highest Rated</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={sortOptions}
+                                            value={sortBy}
+                                            onValueChange={setSortBy}
+                                            placeholder="Sort by"
+                                            triggerClassName="w-full sm:w-40 h-10 sm:h-11"
+                                        />
 
-                                        <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
-                                                <SelectValue placeholder="Genre" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All Genres</SelectItem>
-                                                <SelectItem value="fantasy">Fantasy</SelectItem>
-                                                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                                                <SelectItem value="action">Action</SelectItem>
-                                                <SelectItem value="horror">Horror</SelectItem>
-                                                <SelectItem value="romance">Romance</SelectItem>
-                                                <SelectItem value="comedy">Comedy</SelectItem>
-                                                <SelectItem value="drama">Drama</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={genreOptions}
+                                            value={filterBy}
+                                            onValueChange={setFilterBy}
+                                            placeholder="Genre"
+                                            triggerClassName="w-full sm:w-32 h-10 sm:h-11"
+                                        />
 
-                                        <Select value={yearFilter} onValueChange={setYearFilter}>
-                                            <SelectTrigger className="w-full sm:w-24 h-10 sm:h-11">
-                                                <SelectValue placeholder="Year" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All Years</SelectItem>
-                                                {years.map(year => (
-                                                    <SelectItem key={year} value={year}>{year}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={yearOptions}
+                                            value={yearFilter}
+                                            onValueChange={setYearFilter}
+                                            placeholder="Year"
+                                            triggerClassName="w-full sm:w-24 h-10 sm:h-11"
+                                        />
                                     </div>
                                 </div>
                             </CardContent>

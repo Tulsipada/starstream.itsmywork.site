@@ -5,10 +5,15 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import GoogleTranslate from "./GoogleTranslate";
 import SimpleTranslate from "./SimpleTranslate";
+import cinesagaLogo from "@/assets/logos/cinesaga-logo.jpg";
+import { useDropdownPreventShake } from "@/hooks/use-dropdown-prevent-shake";
 
 const Navigation = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Prevent page shaking when mobile menu is open
+  useDropdownPreventShake(isMobileMenuOpen);
 
   // Close mobile menu when clicking outside or on a link
   useEffect(() => {
@@ -36,8 +41,14 @@ const Navigation = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-4 sm:space-x-8">
-            <Link to="/" className="logo-glow text-lg sm:text-xl lg:text-2xl font-bold tracking-tight">
-              Cinesaga
+            <Link to="/" className="flex items-center">
+              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 border-2 border-gray-300 shadow-lg">
+                <img
+                  src={cinesagaLogo}
+                  alt="Cinesaga"
+                  className="h-6 sm:h-8 lg:h-10 w-auto"
+                />
+              </div>
             </Link>
 
             {/* Desktop Navigation Links */}

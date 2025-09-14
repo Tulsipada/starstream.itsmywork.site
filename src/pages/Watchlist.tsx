@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Search, Bookmark, Play, Plus, Filter, Calendar, Star, Heart, Trash2, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moviesData from "@/data/movies.json";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const Watchlist = () => {
@@ -24,7 +25,7 @@ const Watchlist = () => {
             type: "Movie",
             duration: "2h 15m",
             addedAt: "2024-01-15T14:30:00Z",
-            thumbnail: "/assets/movies/movie1.jpg",
+            thumbnail: "/src/assets/movies/movie1.jpg",
             rating: 4.5,
             genre: "Fantasy",
             year: "2024",
@@ -37,7 +38,7 @@ const Watchlist = () => {
             type: "Movie",
             duration: "1h 45m",
             addedAt: "2024-01-14T20:15:00Z",
-            thumbnail: "/assets/movies/movie2.jpg",
+            thumbnail: "/src/assets/movies/movie2.jpg",
             rating: 4.2,
             genre: "Sci-Fi",
             year: "2024",
@@ -50,7 +51,7 @@ const Watchlist = () => {
             type: "Movie",
             duration: "2h 30m",
             addedAt: "2024-01-13T16:45:00Z",
-            thumbnail: "/assets/movies/movie3.jpg",
+            thumbnail: "/src/assets/movies/movie3.jpg",
             rating: 4.8,
             genre: "Action",
             year: "2024",
@@ -63,7 +64,7 @@ const Watchlist = () => {
             type: "Movie",
             duration: "1h 30m",
             addedAt: "2024-01-12T22:00:00Z",
-            thumbnail: "/assets/movies/movie4.jpg",
+            thumbnail: "/src/assets/movies/movie4.jpg",
             rating: 3.9,
             genre: "Horror",
             year: "2024",
@@ -76,7 +77,7 @@ const Watchlist = () => {
             type: "Movie",
             duration: "1h 55m",
             addedAt: "2024-01-11T19:30:00Z",
-            thumbnail: "/assets/movies/movie5.jpg",
+            thumbnail: "/src/assets/movies/movie5.jpg",
             rating: 4.1,
             genre: "Romance",
             year: "2024",
@@ -137,36 +138,14 @@ const Watchlist = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
             </div>
 
-            <div className="relative">
-                {/* Header */}
-                <div className="bg-background/95 backdrop-blur-md border-b border-border/20 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => navigate(-1)}
-                                    className="text-foreground-muted hover:text-foreground"
-                                >
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <h1 className="text-xl font-bold">My Watchlist</h1>
-                            </div>
-                            <Link to="/" className="text-lg font-bold text-primary">
-                                Cinesaga
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+            <Navigation />
 
-                {/* Content */}
+            {/* Content */}
+            <div className="pt-20 sm:pt-24">
                 <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-                    <div className="space-y-6 sm:space-y-8">
+                    <div className="space-y-8 sm:space-y-10">
                         {/* Filters and Search */}
-                        <Card className="backdrop-blur-md bg-background/95 border-border/20">
+                        <Card className="backdrop-blur-md bg-background/95 border-border/20 relative filter-section mb-8">
                             <CardContent className="p-3 sm:p-4">
                                 <div className="flex flex-col gap-3 sm:gap-4">
                                     <div className="flex-1">
@@ -181,31 +160,35 @@ const Watchlist = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap gap-2 sm:gap-3">
-                                        <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
-                                                <SelectValue placeholder="Sort by" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="recent">Most Recent</SelectItem>
-                                                <SelectItem value="title">Title A-Z</SelectItem>
-                                                <SelectItem value="rating">Highest Rated</SelectItem>
-                                                <SelectItem value="watched">Watched Status</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={[
+                                                { value: "recent", label: "Most Recent" },
+                                                { value: "title", label: "Title A-Z" },
+                                                { value: "rating", label: "Highest Rated" },
+                                                { value: "watched", label: "Watched Status" }
+                                            ]}
+                                            value={sortBy}
+                                            onValueChange={setSortBy}
+                                            placeholder="Sort by"
+                                            className="w-full sm:w-40"
+                                            triggerClassName="h-10 sm:h-11"
+                                        />
 
-                                        <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
-                                                <SelectValue placeholder="Filter" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All Genres</SelectItem>
-                                                <SelectItem value="fantasy">Fantasy</SelectItem>
-                                                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                                                <SelectItem value="action">Action</SelectItem>
-                                                <SelectItem value="horror">Horror</SelectItem>
-                                                <SelectItem value="romance">Romance</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={[
+                                                { value: "all", label: "All Genres" },
+                                                { value: "fantasy", label: "Fantasy" },
+                                                { value: "sci-fi", label: "Sci-Fi" },
+                                                { value: "action", label: "Action" },
+                                                { value: "horror", label: "Horror" },
+                                                { value: "romance", label: "Romance" }
+                                            ]}
+                                            value={filterBy}
+                                            onValueChange={setFilterBy}
+                                            placeholder="Filter"
+                                            className="w-full sm:w-32"
+                                            triggerClassName="h-10 sm:h-11"
+                                        />
                                     </div>
                                 </div>
                             </CardContent>

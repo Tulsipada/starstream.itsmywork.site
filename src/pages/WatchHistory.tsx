@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Search, Clock, Play, Plus, Filter, Calendar, Star, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moviesData from "@/data/movies.json";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const WatchHistory = () => {
@@ -25,7 +26,7 @@ const WatchHistory = () => {
             duration: "2h 15m",
             watchedAt: "2024-01-15T14:30:00Z",
             progress: 85,
-            thumbnail: "/assets/movies/movie1.jpg",
+            thumbnail: "/src/assets/movies/movie1.jpg",
             rating: 4.5,
             genre: "Fantasy",
             year: "2024"
@@ -37,7 +38,7 @@ const WatchHistory = () => {
             duration: "1h 45m",
             watchedAt: "2024-01-14T20:15:00Z",
             progress: 100,
-            thumbnail: "/assets/movies/movie2.jpg",
+            thumbnail: "/src/assets/movies/movie2.jpg",
             rating: 4.2,
             genre: "Sci-Fi",
             year: "2024"
@@ -49,7 +50,7 @@ const WatchHistory = () => {
             duration: "2h 30m",
             watchedAt: "2024-01-13T16:45:00Z",
             progress: 60,
-            thumbnail: "/assets/movies/movie3.jpg",
+            thumbnail: "/src/assets/movies/movie3.jpg",
             rating: 4.8,
             genre: "Action",
             year: "2024"
@@ -61,7 +62,7 @@ const WatchHistory = () => {
             duration: "1h 30m",
             watchedAt: "2024-01-12T22:00:00Z",
             progress: 100,
-            thumbnail: "/assets/movies/movie4.jpg",
+            thumbnail: "/src/assets/movies/movie4.jpg",
             rating: 3.9,
             genre: "Horror",
             year: "2024"
@@ -73,7 +74,7 @@ const WatchHistory = () => {
             duration: "1h 55m",
             watchedAt: "2024-01-11T19:30:00Z",
             progress: 100,
-            thumbnail: "/assets/movies/movie5.jpg",
+            thumbnail: "/src/assets/movies/movie5.jpg",
             rating: 4.1,
             genre: "Romance",
             year: "2024"
@@ -124,36 +125,14 @@ const WatchHistory = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
             </div>
 
-            <div className="relative">
-                {/* Header */}
-                <div className="bg-background/95 backdrop-blur-md border-b border-border/20 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => navigate(-1)}
-                                    className="text-foreground-muted hover:text-foreground"
-                                >
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <h1 className="text-xl font-bold">Watch History</h1>
-                            </div>
-                            <Link to="/" className="text-lg font-bold text-primary">
-                                Cinesaga
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+            <Navigation />
 
-                {/* Content */}
+            {/* Content */}
+            <div className="pt-20 sm:pt-24">
                 <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-                    <div className="space-y-6 sm:space-y-8">
+                    <div className="space-y-8 sm:space-y-10">
                         {/* Filters and Search */}
-                        <Card className="backdrop-blur-md bg-background/95 border-border/20">
+                        <Card className="backdrop-blur-md bg-background/95 border-border/20 relative filter-section mb-8">
                             <CardContent className="p-3 sm:p-4">
                                 <div className="flex flex-col gap-3 sm:gap-4">
                                     <div className="flex-1">
@@ -163,36 +142,40 @@ const WatchHistory = () => {
                                                 placeholder="Search watch history..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="pl-10 h-10 sm:h-11"
+                                                className="pl-10 h-10 sm:h-11 text-sm sm:text-base"
                                             />
                                         </div>
                                     </div>
-                                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                                        <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
-                                                <SelectValue placeholder="Sort by" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="recent">Most Recent</SelectItem>
-                                                <SelectItem value="title">Title A-Z</SelectItem>
-                                                <SelectItem value="rating">Highest Rated</SelectItem>
-                                                <SelectItem value="progress">Progress</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+                                        <CustomDropdown
+                                            options={[
+                                                { value: "recent", label: "Most Recent" },
+                                                { value: "title", label: "Title A-Z" },
+                                                { value: "rating", label: "Highest Rated" },
+                                                { value: "progress", label: "Progress" }
+                                            ]}
+                                            value={sortBy}
+                                            onValueChange={setSortBy}
+                                            placeholder="Sort by"
+                                            className="w-full"
+                                            triggerClassName="h-10 sm:h-11 text-xs sm:text-sm"
+                                        />
 
-                                        <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
-                                                <SelectValue placeholder="Filter" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All Genres</SelectItem>
-                                                <SelectItem value="fantasy">Fantasy</SelectItem>
-                                                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                                                <SelectItem value="action">Action</SelectItem>
-                                                <SelectItem value="horror">Horror</SelectItem>
-                                                <SelectItem value="romance">Romance</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={[
+                                                { value: "all", label: "All Genres" },
+                                                { value: "fantasy", label: "Fantasy" },
+                                                { value: "sci-fi", label: "Sci-Fi" },
+                                                { value: "action", label: "Action" },
+                                                { value: "horror", label: "Horror" },
+                                                { value: "romance", label: "Romance" }
+                                            ]}
+                                            value={filterBy}
+                                            onValueChange={setFilterBy}
+                                            placeholder="Filter"
+                                            className="w-full"
+                                            triggerClassName="h-10 sm:h-11 text-xs sm:text-sm"
+                                        />
                                     </div>
                                 </div>
                             </CardContent>
@@ -218,14 +201,14 @@ const WatchHistory = () => {
                                     <Card key={item.id} className="backdrop-blur-md bg-background/95 border-border/20 hover:border-primary/30 transition-colors">
                                         <CardContent className="p-3 sm:p-4">
                                             <div className="flex gap-3 sm:gap-4">
-                                                <div className="relative w-20 h-14 sm:w-24 sm:h-16 flex-shrink-0">
+                                                <div className="relative w-16 h-12 sm:w-24 sm:h-16 flex-shrink-0">
                                                     <img
                                                         src={item.thumbnail}
                                                         alt={item.title}
                                                         className="w-full h-full object-cover rounded-lg"
                                                     />
                                                     <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                                        <Button size="sm" variant="secondary" asChild>
+                                                        <Button size="sm" variant="secondary" asChild className="p-1 sm:p-2">
                                                             <Link to={`/watch/${item.id}`}>
                                                                 <Play className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Link>
@@ -234,24 +217,25 @@ const WatchHistory = () => {
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="flex items-start justify-between">
+                                                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-0">
                                                         <div className="flex-1 min-w-0">
-                                                            <h3 className="font-semibold text-base sm:text-lg truncate">{item.title}</h3>
+                                                            <h3 className="font-semibold text-sm sm:text-lg truncate">{item.title}</h3>
                                                             <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
-                                                                <Badge variant="secondary" className="text-xs">
+                                                                <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
                                                                     {item.type}
                                                                 </Badge>
-                                                                <Badge variant="outline" className="text-xs">
+                                                                <Badge variant="outline" className="text-xs px-1.5 py-0.5">
                                                                     {item.genre}
                                                                 </Badge>
-                                                                <Badge variant="outline" className="text-xs">
+                                                                <Badge variant="outline" className="text-xs px-1.5 py-0.5">
                                                                     {item.year}
                                                                 </Badge>
                                                             </div>
-                                                            <div className="flex items-center gap-2 sm:gap-4 mt-2 text-xs sm:text-sm text-foreground-muted flex-wrap">
+                                                            <div className="flex items-center gap-1 sm:gap-4 mt-2 text-xs text-foreground-muted flex-wrap">
                                                                 <span className="flex items-center gap-1">
                                                                     <Calendar className="w-3 h-3" />
-                                                                    {formatDate(item.watchedAt)}
+                                                                    <span className="hidden sm:inline">{formatDate(item.watchedAt)}</span>
+                                                                    <span className="sm:hidden">{formatDate(item.watchedAt).split(' ')[0]}</span>
                                                                 </span>
                                                                 <span className="flex items-center gap-1">
                                                                     <Clock className="w-3 h-3" />
@@ -264,17 +248,18 @@ const WatchHistory = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center gap-1 sm:gap-2 ml-2 sm:ml-4">
-                                                            <Button size="sm" variant="outline" asChild className="text-xs sm:text-sm">
+                                                        <div className="flex items-center gap-1 sm:gap-2 sm:ml-4">
+                                                            <Button size="sm" variant="outline" asChild className="text-xs h-8 sm:h-9 px-2 sm:px-3">
                                                                 <Link to={`/watch/${item.id}`}>
-                                                                    <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                                                                    {item.progress === 100 ? "Replay" : "Continue"}
+                                                                    <Play className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                                                                    <span className="hidden sm:inline">{item.progress === 100 ? "Replay" : "Continue"}</span>
+                                                                    <span className="sm:hidden">{item.progress === 100 ? "Replay" : "Play"}</span>
                                                                 </Link>
                                                             </Button>
-                                                            <Button size="sm" variant="ghost" className="p-1 sm:p-2">
+                                                            <Button size="sm" variant="ghost" className="p-1 sm:p-2 h-8 w-8 sm:h-9 sm:w-9">
                                                                 <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Button>
-                                                            <Button size="sm" variant="ghost" onClick={() => removeFromHistory(item.id)} className="p-1 sm:p-2">
+                                                            <Button size="sm" variant="ghost" onClick={() => removeFromHistory(item.id)} className="p-1 sm:p-2 h-8 w-8 sm:h-9 sm:w-9">
                                                                 <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                                                             </Button>
                                                         </div>

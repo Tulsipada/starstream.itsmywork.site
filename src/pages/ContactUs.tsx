@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Mail, Phone, MapPin, Clock, Send, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const ContactUs = () => {
@@ -89,32 +90,10 @@ const ContactUs = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
             </div>
 
-            <div className="relative">
-                {/* Header */}
-                <div className="bg-background/95 backdrop-blur-md border-b border-border/20 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => navigate(-1)}
-                                    className="text-foreground-muted hover:text-foreground"
-                                >
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <h1 className="text-xl font-bold">Contact Us</h1>
-                            </div>
-                            <Link to="/" className="text-lg font-bold text-primary">
-                                Cinesaga
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+            <Navigation />
 
-                {/* Content */}
+            {/* Content */}
+            <div className="pt-16 sm:pt-20">
                 <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
                     <div className="max-w-6xl mx-auto">
                         <div className="space-y-6 sm:space-y-8">
@@ -246,19 +225,21 @@ const ContactUs = () => {
                                                         <label htmlFor="category" className="block text-sm font-medium mb-2">
                                                             Category
                                                         </label>
-                                                        <Select value={formData.category} onValueChange={handleSelectChange}>
-                                                            <SelectTrigger className="h-10 sm:h-11">
-                                                                <SelectValue placeholder="Select a category" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                <SelectItem value="general">General Inquiry</SelectItem>
-                                                                <SelectItem value="technical">Technical Support</SelectItem>
-                                                                <SelectItem value="billing">Billing Question</SelectItem>
-                                                                <SelectItem value="feedback">Feedback</SelectItem>
-                                                                <SelectItem value="partnership">Partnership</SelectItem>
-                                                                <SelectItem value="other">Other</SelectItem>
-                                                            </SelectContent>
-                                                        </Select>
+                                                        <CustomDropdown
+                                                            options={[
+                                                                { value: "general", label: "General Inquiry" },
+                                                                { value: "technical", label: "Technical Support" },
+                                                                { value: "billing", label: "Billing Question" },
+                                                                { value: "feedback", label: "Feedback" },
+                                                                { value: "partnership", label: "Partnership" },
+                                                                { value: "other", label: "Other" }
+                                                            ]}
+                                                            value={formData.category}
+                                                            onValueChange={handleSelectChange}
+                                                            placeholder="Select a category"
+                                                            className="w-full"
+                                                            triggerClassName="h-10 sm:h-11"
+                                                        />
                                                     </div>
 
                                                     <div>

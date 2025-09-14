@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, ArrowLeft, Star, Zap, Shield, Download, Tv, Globe } from "lucide-react";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
 const PreLaunchOffers = () => {
@@ -93,23 +94,7 @@ const PreLaunchOffers = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/20">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <Button
-                            variant="ghost"
-                            onClick={() => navigate(-1)}
-                            className="flex items-center space-x-2"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Back</span>
-                        </Button>
-                        <h1 className="text-xl font-bold">Cinesaga</h1>
-                        <div className="w-20"></div> {/* Spacer for centering */}
-                    </div>
-                </div>
-            </div>
+            <Navigation />
 
             {/* Main Content */}
             <div className="pt-16 sm:pt-20 pb-12 sm:pb-16">

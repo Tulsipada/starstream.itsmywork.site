@@ -5,9 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Search, Play, Plus, Filter, Calendar, Star, Heart, Bookmark, Crown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroesData from "@/data/heroes.json";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useMobileDetection } from "@/hooks/use-mobile-detection";
 
@@ -18,25 +20,50 @@ const Originals = () => {
     const [sortBy, setSortBy] = useState("popular");
     const [filterBy, setFilterBy] = useState("all");
 
+    const sortOptions = [
+        { value: "popular", label: "Popular" },
+        { value: "title", label: "Title A-Z" },
+        { value: "year", label: "Newest First" },
+        { value: "rating", label: "Highest Rated" }
+    ];
+
+    const genreOptions = [
+        { value: "all", label: "All Genres" },
+        { value: "fantasy", label: "Fantasy" },
+        { value: "sci-fi", label: "Sci-Fi" },
+        { value: "action", label: "Action" },
+        { value: "adventure", label: "Adventure" },
+        { value: "drama", label: "Drama" },
+        { value: "thriller", label: "Thriller" },
+        { value: "horror", label: "Horror" },
+        { value: "romance", label: "Romance" },
+        { value: "comedy", label: "Comedy" }
+    ];
+
     // Get all originals from heroes data (Cinesaga Originals)
     const allOriginals = heroesData;
 
     const filteredOriginals = allOriginals
         .filter(original => {
             const matchesSearch = original.title.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesGenre = filterBy === "all" || original.genre.toLowerCase() === filterBy.toLowerCase();
+            const matchesGenre = filterBy === "all" || 
+                original.genre.toLowerCase().split(',').some(genre => 
+                    genre.trim().toLowerCase() === filterBy.toLowerCase()
+                );
             return matchesSearch && matchesGenre;
         })
         .sort((a, b) => {
             switch (sortBy) {
                 case "popular":
-                    return b.rating - a.rating;
+                    // Sort by title for now since rating is not numeric
+                    return a.title.localeCompare(b.title);
                 case "title":
                     return a.title.localeCompare(b.title);
                 case "year":
                     return parseInt(b.year) - parseInt(a.year);
                 case "rating":
-                    return b.rating - a.rating;
+                    // Sort by title for now since rating is not numeric
+                    return a.title.localeCompare(b.title);
                 default:
                     return 0;
             }
@@ -60,36 +87,14 @@ const Originals = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(156,146,172,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
             </div>
 
-            <div className="relative">
-                {/* Header */}
-                <div className="bg-background/95 backdrop-blur-md border-b border-border/20 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => navigate(-1)}
-                                    className="text-foreground-muted hover:text-foreground"
-                                >
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Back
-                                </Button>
-                                <div className="h-6 w-px bg-border" />
-                                <h1 className="text-xl font-bold">Cinesaga Originals</h1>
-                            </div>
-                            <Link to="/" className="text-lg font-bold text-primary">
-                                Cinesaga
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+            <Navigation />
 
-                {/* Content */}
+            {/* Content */}
+            <div className="pt-20 sm:pt-24">
                 <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
-                    <div className="space-y-6 sm:space-y-8">
+                    <div className="space-y-8 sm:space-y-10">
                         {/* Hero Section */}
-                        <div className="text-center py-6 sm:py-8">
+                        <div className="text-center py-8 sm:py-12">
                             <div className="flex items-center justify-center mb-3 sm:mb-4">
                                 <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-primary mr-2" />
                                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Cinesaga Originals</h2>
@@ -101,48 +106,37 @@ const Originals = () => {
                         </div>
 
                         {/* Filters and Search */}
-                        <Card className="backdrop-blur-md bg-background/95 border-border/20">
-                            <CardContent className="p-3 sm:p-4">
-                                <div className="flex flex-col gap-3 sm:gap-4">
-                                    <div className="flex-1">
-                                        <div className="relative">
-                                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
-                                            <Input
-                                                placeholder="Search originals..."
-                                                value={searchQuery}
-                                                onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="pl-10 h-10 sm:h-11"
-                                            />
-                                        </div>
+                        <Card className="backdrop-blur-md bg-background/95 border-border/20 relative filter-section mb-8">
+                            <CardContent className="p-4 sm:p-6">
+                                <div className="space-y-4">
+                                    {/* Search Bar */}
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4" />
+                                        <Input
+                                            placeholder="Search originals..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="pl-10 h-11 text-base w-full"
+                                        />
                                     </div>
-                                    <div className="flex flex-wrap gap-2 sm:gap-3">
-                                        <Select value={sortBy} onValueChange={setSortBy}>
-                                            <SelectTrigger className="w-full sm:w-40 h-10 sm:h-11">
-                                                <SelectValue placeholder="Sort by" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="popular">Most Popular</SelectItem>
-                                                <SelectItem value="title">Title A-Z</SelectItem>
-                                                <SelectItem value="year">Newest First</SelectItem>
-                                                <SelectItem value="rating">Highest Rated</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                    
+                                    {/* Filter Controls */}
+                                    <div className="flex flex-wrap gap-3">
+                                        <CustomDropdown
+                                            options={sortOptions}
+                                            value={sortBy}
+                                            onValueChange={setSortBy}
+                                            placeholder="Sort by"
+                                            triggerClassName="w-full sm:w-44 h-11"
+                                        />
 
-                                        <Select value={filterBy} onValueChange={setFilterBy}>
-                                            <SelectTrigger className="w-full sm:w-32 h-10 sm:h-11">
-                                                <SelectValue placeholder="Genre" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="all">All Genres</SelectItem>
-                                                <SelectItem value="fantasy">Fantasy</SelectItem>
-                                                <SelectItem value="sci-fi">Sci-Fi</SelectItem>
-                                                <SelectItem value="action">Action</SelectItem>
-                                                <SelectItem value="horror">Horror</SelectItem>
-                                                <SelectItem value="romance">Romance</SelectItem>
-                                                <SelectItem value="comedy">Comedy</SelectItem>
-                                                <SelectItem value="drama">Drama</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <CustomDropdown
+                                            options={genreOptions}
+                                            value={filterBy}
+                                            onValueChange={setFilterBy}
+                                            placeholder="All Genres"
+                                            triggerClassName="w-full sm:w-40 h-11"
+                                        />
                                     </div>
                                 </div>
                             </CardContent>
@@ -152,6 +146,11 @@ const Originals = () => {
                         <div className="flex items-center justify-between">
                             <p className="text-foreground-muted">
                                 {filteredOriginals.length} original{filteredOriginals.length !== 1 ? 's' : ''} found
+                                {filterBy !== "all" && (
+                                    <span className="ml-2 text-primary">
+                                        (filtered by {filterBy === "sci-fi" ? "Sci-Fi" : filterBy.charAt(0).toUpperCase() + filterBy.slice(1)})
+                                    </span>
+                                )}
                             </p>
                         </div>
 

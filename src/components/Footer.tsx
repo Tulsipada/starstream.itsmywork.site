@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Clock, Play, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
+import cinesagaLogo from "@/assets/logos/cinesaga-logo.jpg";
 
 // Custom X (formerly Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (
@@ -39,7 +40,15 @@ const Footer = () => {
         <div className="text-center mb-12">
           {/* Brand Section */}
           <div className="mb-8">
-            <div className="logo-glow text-3xl font-bold mb-4">Cinesaga</div>
+            <div className="mb-4">
+              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-6 py-4 border-2 border-gray-300 shadow-lg inline-block">
+                <img
+                  src={cinesagaLogo}
+                  alt="Cinesaga"
+                  className="h-10 sm:h-14 w-auto"
+                />
+              </div>
+            </div>
             <p className="text-foreground-muted text-lg max-w-2xl mx-auto leading-relaxed">
               Your ultimate destination for premium entertainment. Discover amazing movies,
               exclusive originals, and immersive viewing experiences.

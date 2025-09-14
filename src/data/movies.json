@@ -2,7 +2,7 @@
   {
     "id": "movie1",
     "title": "Neon Nights",
-    "thumbnail": "/assets/movies/movie1.jpg",
+    "thumbnail": "/src/assets/movies/movie1.jpg",
     "videoUrl": "/src/assets/videos/neon-nights.mp4",
     "duration": "2h 15min",
     "year": "2024",
@@ -15,7 +15,7 @@
   {
     "id": "movie2",
     "title": "Dragon's Crown",
-    "thumbnail": "/assets/movies/movie2.jpg",
+    "thumbnail": "/src/assets/movies/movie2.jpg",
     "videoUrl": "/src/assets/videos/dragons-crown.mp4",
     "duration": "2h 30min",
     "year": "2024",
@@ -28,7 +28,7 @@
   {
     "id": "movie3",
     "title": "Galactic Odyssey",
-    "thumbnail": "/assets/movies/movie3.jpg",
+    "thumbnail": "/src/assets/movies/movie3.jpg",
     "videoUrl": "/src/assets/videos/galactic-odyssey.mp4",
     "duration": "2h 45min",
     "year": "2024",
@@ -41,7 +41,7 @@
   {
     "id": "movie4",
     "title": "Summer Love",
-    "thumbnail": "/assets/movies/movie4.jpg",
+    "thumbnail": "/src/assets/movies/movie4.jpg",
     "videoUrl": "/src/assets/videos/summer-love.mp4",
     "duration": "1h 45min",
     "year": "2024",
@@ -54,7 +54,7 @@
   {
     "id": "movie5",
     "title": "Midnight Terror",
-    "thumbnail": "/assets/movies/movie5.jpg",
+    "thumbnail": "/src/assets/movies/movie5.jpg",
     "videoUrl": "/src/assets/videos/midnight-terror.mp4",
     "duration": "1h 55min",
     "year": "2024",

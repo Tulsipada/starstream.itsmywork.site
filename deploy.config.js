@@ -27,7 +27,7 @@ export default {
       description: 'Experience the future of streaming with Cinesaga. Watch trending movies, popular shows, and exclusive original content.',
       keywords: 'streaming, movies, tv shows, entertainment, cinesaga, tulsipada',
       author: 'tulsipada',
-      ogImage: '/assets/heroes/hero-dragon.jpg'
+      ogImage: '/src/assets/heroes/hero-dragon.jpg'
     }
   },
 

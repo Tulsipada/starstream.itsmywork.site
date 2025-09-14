@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import GoogleTranslate from "./GoogleTranslate";
+import SimpleTranslate from "./SimpleTranslate";
 
 const Navigation = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -69,6 +71,16 @@ const Navigation = () => {
               <Search className="w-4 h-4" />
             </Button>
 
+            {/* Google Translate - Hidden, only for functionality */}
+            <div className="hidden">
+              <GoogleTranslate />
+            </div>
+
+            {/* Custom Language Selector */}
+            <div className="hidden sm:block">
+              <SimpleTranslate />
+            </div>
+
             {/* Auth Buttons */}
             <div className="hidden sm:flex items-center space-x-2">
               <Button variant="ghost" size="sm" asChild>
@@ -120,6 +132,19 @@ const Navigation = () => {
                   <Link to="/watchlist" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Watchlist</Link>
                   <Link to="/watch-history" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>History</Link>
                   <Link to="/contact" className="nav-link text-base py-2" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+                </div>
+
+                {/* Mobile Google Translate - Hidden, only for functionality */}
+                <div className="hidden">
+                  <GoogleTranslate />
+                </div>
+
+                {/* Mobile Language Selector */}
+                <div className="pt-4 border-t border-border/20">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-foreground">Language</span>
+                  </div>
+                  <SimpleTranslate />
                 </div>
 
                 {/* Mobile Auth Buttons */}

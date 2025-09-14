@@ -16,6 +16,7 @@ import Originals from "./pages/Originals";
 import ContactUs from "./pages/ContactUs";
 import PreLaunchOffers from "./pages/PreLaunchOffers";
 import NotFound from "./pages/NotFound";
+import FloatingTranslate from "./components/FloatingTranslate";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <FloatingTranslate />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -21,6 +21,177 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@cinesaga" />
     <meta name="twitter:image" content="/placeholder.svg" />
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        // Get URL parameter for initial language
+        const urlParams = new URLSearchParams(window.location.search);
+        const googtrans = urlParams.get("googtrans");
+        console.log("Current URL:", window.location.href);
+        console.log("Search params:", window.location.search);
+        console.log("All URL params:", Object.fromEntries(urlParams.entries()));
+        console.log(
+          "Initializing Google Translate with URL parameter:",
+          googtrans
+        );
+
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            includedLanguages: "en,hi,gu,pa,mr,bn,or,as,bho,ta,te,ml,kn",
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            multilanguagePage: true,
+            gaTrack: false,
+            gaId: null,
+          },
+          "google_translate_element"
+        );
+
+        // If we have a URL parameter, try to set it immediately
+        if (googtrans) {
+          // Wait a bit for Google Translate to initialize
+          setTimeout(() => {
+            const selectElement = document.querySelector(".goog-te-combo");
+            if (selectElement) {
+              console.log("Setting initial language to:", googtrans);
+              selectElement.value = googtrans;
+              selectElement.dispatchEvent(new Event("change"));
+            } else {
+              // If select element not found, try to make it visible temporarily
+              const googleTranslateElement = document.querySelector(
+                "#google_translate_element"
+              );
+              if (googleTranslateElement) {
+                // Make it visible temporarily
+                googleTranslateElement.style.position = "relative";
+                googleTranslateElement.style.top = "0";
+                googleTranslateElement.style.left = "0";
+                googleTranslateElement.style.visibility = "visible";
+                googleTranslateElement.style.opacity = "1";
+                googleTranslateElement.style.height = "auto";
+                googleTranslateElement.style.width = "auto";
+                googleTranslateElement.style.overflow = "visible";
+
+                // Wait a bit and try again
+                setTimeout(() => {
+                  const selectElement =
+                    document.querySelector(".goog-te-combo");
+                  if (selectElement) {
+                    console.log("Found select element after making visible");
+                    selectElement.value = googtrans;
+                    selectElement.dispatchEvent(new Event("change"));
+
+                    // Hide it again
+                    googleTranslateElement.style.position = "absolute";
+                    googleTranslateElement.style.top = "-9999px";
+                    googleTranslateElement.style.left = "-9999px";
+                    googleTranslateElement.style.visibility = "hidden";
+                    googleTranslateElement.style.opacity = "0";
+                    googleTranslateElement.style.height = "0";
+                    googleTranslateElement.style.width = "0";
+                    googleTranslateElement.style.overflow = "hidden";
+                  }
+                }, 500);
+              }
+            }
+          }, 100);
+        }
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+
+    <!-- Additional script to handle URL parameters -->
+    <script type="text/javascript">
+      // Wait for page to load and then handle URL parameters
+      window.addEventListener("load", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const googtrans = urlParams.get("googtrans");
+
+        if (googtrans) {
+          console.log("Page loaded, handling URL parameter:", googtrans);
+
+          // Function to apply translation
+          const applyTranslation = () => {
+            const selectElement = document.querySelector(".goog-te-combo");
+            console.log("Select element found:", !!selectElement);
+
+            if (selectElement) {
+              console.log("Current select value:", selectElement.value);
+              console.log("Setting to:", googtrans);
+
+              selectElement.value = googtrans;
+              selectElement.dispatchEvent(new Event("change"));
+
+              // Also try triggering with a click
+              selectElement.click();
+              selectElement.value = googtrans;
+              selectElement.dispatchEvent(new Event("change"));
+
+              console.log(
+                "Translation applied, new value:",
+                selectElement.value
+              );
+              return true;
+            } else {
+              // Try to make Google Translate element visible temporarily
+              const googleTranslateElement = document.querySelector(
+                "#google_translate_element"
+              );
+              if (googleTranslateElement) {
+                console.log(
+                  "Making Google Translate element visible temporarily"
+                );
+                googleTranslateElement.style.position = "relative";
+                googleTranslateElement.style.top = "0";
+                googleTranslateElement.style.left = "0";
+                googleTranslateElement.style.visibility = "visible";
+                googleTranslateElement.style.opacity = "1";
+                googleTranslateElement.style.height = "auto";
+                googleTranslateElement.style.width = "auto";
+                googleTranslateElement.style.overflow = "visible";
+
+                // Wait a bit and try again
+                setTimeout(() => {
+                  const selectElement =
+                    document.querySelector(".goog-te-combo");
+                  if (selectElement) {
+                    console.log("Found select element after making visible");
+                    selectElement.value = googtrans;
+                    selectElement.dispatchEvent(new Event("change"));
+
+                    // Hide it again
+                    googleTranslateElement.style.position = "absolute";
+                    googleTranslateElement.style.top = "-9999px";
+                    googleTranslateElement.style.left = "-9999px";
+                    googleTranslateElement.style.visibility = "hidden";
+                    googleTranslateElement.style.opacity = "0";
+                    googleTranslateElement.style.height = "0";
+                    googleTranslateElement.style.width = "0";
+                    googleTranslateElement.style.overflow = "hidden";
+                  }
+                }, 500);
+              }
+            }
+            return false;
+          };
+
+          // Try multiple times with increasing delays
+          const attempts = [0, 500, 1000, 2000, 3000];
+          attempts.forEach((delay) => {
+            setTimeout(() => {
+              if (applyTranslation()) {
+                console.log("Translation successful at delay:", delay);
+              }
+            }, delay);
+          });
+        }
+      });
+    </script>
   </head>
 
   <body>

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import CustomDropdown from "@/components/ui/custom-dropdown";
 import { ArrowLeft, Search, Play, Plus, Filter, Calendar, Star, Heart, Bookmark } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import moviesData from "@/data/movies.json";
+import videosData from "@/data/videos.json";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useMobileDetection } from "@/hooks/use-mobile-detection";
@@ -24,23 +24,55 @@ const Movies = () => {
         { value: "popular", label: "Most Popular" },
         { value: "title", label: "Title A-Z" },
         { value: "year", label: "Newest First" },
-        { value: "rating", label: "Highest Rated" }
+        { value: "views", label: "Most Viewed" },
+        { value: "duration", label: "Duration" }
     ];
 
+    // Helper function to detect genre from title and description
+    const detectGenre = (title: string, description: string) => {
+        const text = (title + " " + description).toLowerCase();
+        if (text.includes("bunny") || text.includes("cartoon") || text.includes("animation")) return "Animation";
+        if (text.includes("blender") || text.includes("open movie")) return "Documentary";
+        if (text.includes("bigger") || text.includes("blaze") || text.includes("escape")) return "Action";
+        if (text.includes("chromecast") || text.includes("google")) return "Tech";
+        return "Various";
+    };
+
+    // Helper function to parse duration string to minutes
+    const parseDuration = (duration: string) => {
+        const match = duration.match(/(\d+):(\d+)/);
+        if (match) {
+            const minutes = parseInt(match[1]);
+            const seconds = parseInt(match[2]);
+            return minutes * 60 + seconds;
+        }
+        return 0;
+    };
+
+    // Transform video data to movie format for display
+    const allMovies = videosData.map(video => ({
+        id: video.id,
+        title: video.title,
+        thumbnail: video.thumbnailUrl,
+        videoUrl: video.videoUrl,
+        duration: video.duration,
+        year: video.uploadTime,
+        rating: "PG", // Default rating since videos.json doesn't have rating
+        genre: detectGenre(video.title, video.description),
+        description: video.description,
+        cast: video.author,
+        director: video.author,
+        views: video.views,
+        isLive: video.isLive
+    }));
+
+    // Get unique genres from the transformed data
+    const uniqueGenres = [...new Set(allMovies.map(movie => movie.genre))].sort();
+    
     const genreOptions = [
         { value: "all", label: "All Genres" },
-        { value: "fantasy", label: "Fantasy" },
-        { value: "sci-fi", label: "Sci-Fi" },
-        { value: "action", label: "Action" },
-        { value: "horror", label: "Horror" },
-        { value: "romance", label: "Romance" },
-        { value: "comedy", label: "Comedy" },
-        { value: "drama", label: "Drama" }
+        ...uniqueGenres.map(genre => ({ value: genre.toLowerCase(), label: genre }))
     ];
-
-
-    // Get all movies from the data
-    const allMovies = moviesData;
 
     const filteredMovies = allMovies
         .filter(movie => {
@@ -52,13 +84,23 @@ const Movies = () => {
         .sort((a, b) => {
             switch (sortBy) {
                 case "popular":
-                    return a.title.localeCompare(b.title); // Sort by title for now
+                    // Sort by views (convert to number for proper sorting)
+                    const viewsA = parseInt(a.views.replace(/[^\d]/g, '')) || 0;
+                    const viewsB = parseInt(b.views.replace(/[^\d]/g, '')) || 0;
+                    return viewsB - viewsA;
                 case "title":
                     return a.title.localeCompare(b.title);
                 case "year":
                     return parseInt(b.year) - parseInt(a.year);
-                case "rating":
-                    return a.title.localeCompare(b.title); // Sort by title for now
+                case "views":
+                    const viewsA2 = parseInt(a.views.replace(/[^\d]/g, '')) || 0;
+                    const viewsB2 = parseInt(b.views.replace(/[^\d]/g, '')) || 0;
+                    return viewsB2 - viewsA2;
+                case "duration":
+                    // Sort by duration (convert to minutes for comparison)
+                    const durationA = parseDuration(a.duration);
+                    const durationB = parseDuration(b.duration);
+                    return durationB - durationA;
                 default:
                     return 0;
             }
@@ -213,6 +255,15 @@ const Movies = () => {
                                                         <Heart className="w-4 h-4" />
                                                     </Button>
                                                 </div>
+
+                                                {/* Live Badge */}
+                                                {movie.isLive && (
+                                                    <div className="absolute bottom-2 right-2">
+                                                        <Badge className="bg-red-500/90 text-white animate-pulse">
+                                                            LIVE
+                                                        </Badge>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             <div className="p-3 sm:p-4">
@@ -240,7 +291,10 @@ const Movies = () => {
                                                                 {movie.rating}
                                                             </span>
                                                         </div>
-                                                        <span className="text-xs">{movie.duration}</span>
+                                                        <div className="flex flex-col items-end text-xs">
+                                                            <span>{movie.duration}</span>
+                                                            <span className="text-foreground-muted">{movie.views} views</span>
+                                                        </div>
                                                     </div>
                                                 </div>
 

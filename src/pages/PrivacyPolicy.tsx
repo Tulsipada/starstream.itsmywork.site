@@ -58,231 +58,217 @@ const PrivacyPolicy = () => {
 
                         <CardContent className="space-y-6 sm:space-y-8">
                             <div className="prose prose-gray max-w-none">
+                                {/* Effective Date */}
+                                <div className="p-4 bg-primary/5 rounded-lg border border-primary/20 mb-6">
+                                    <p className="text-sm text-foreground-muted">
+                                        <strong>Effective Date:</strong> 5th July 2025
+                                    </p>
+                                    <p className="text-sm text-foreground-muted">
+                                        <strong>Last Updated:</strong> 5th July 2025
+                                    </p>
+                                </div>
+
+                                {/* Introduction */}
+                                <section>
+                                    <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            Cinesaga ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, store, and share your personal information when you use our platform (website and mobile app).
+                                        </p>
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            By accessing or using Cinesaga, you agree to this Privacy Policy. If you do not agree, please do not use the Platform.
+                                        </p>
+                                    </div>
+                                </section>
+
+                                <Separator className="my-8" />
+
+                                {/* 1. Information We Collect */}
                                 <section>
                                     <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
                                         <Eye className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
-                                        Information We Collect
+                                        1. Information We Collect
                                     </h2>
                                     <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            We may collect the following categories of personal data:
+                                        </p>
+
                                         <div>
-                                            <h3 className="text-base sm:text-lg font-medium mb-2">Personal Information</h3>
-                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
-                                                When you create an account with Cinesaga, we collect information such as:
-                                            </p>
-                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base">
-                                                <li>Name (first and last name)</li>
-                                                <li>Email address or mobile phone number</li>
-                                                <li>Account preferences and settings</li>
-                                                <li>Payment information (processed securely through third-party providers)</li>
+                                            <h3 className="text-base sm:text-lg font-medium mb-2">a) Information You Provide Directly</h3>
+                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base ml-4">
+                                                <li>Name</li>
+                                                <li>Email address</li>
+                                                <li>Phone number</li>
+                                                <li>Payment information (processed securely via payment gateways)</li>
+                                                <li>Account credentials (username, password)</li>
                                             </ul>
                                         </div>
 
                                         <div>
-                                            <h3 className="text-base sm:text-lg font-medium mb-2">Usage Information</h3>
-                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
-                                                We automatically collect certain information about your use of our service:
-                                            </p>
-                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base">
-                                                <li>Content you watch, search for, and interact with</li>
-                                                <li>Device information (type, operating system, browser)</li>
-                                                <li>IP address and location data</li>
-                                                <li>Usage patterns and preferences</li>
+                                            <h3 className="text-base sm:text-lg font-medium mb-2">b) Information Collected Automatically</h3>
+                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base ml-4">
+                                                <li>IP address</li>
+                                                <li>Device type, OS, and browser details</li>
+                                                <li>Access logs and usage patterns</li>
+                                                <li>Location (based on IP or device permissions)</li>
+                                                <li>Viewing preferences and watch history</li>
                                             </ul>
                                         </div>
-                                    </div>
-                                </section>
 
-                                <Separator className="my-8" />
-
-                                <section>
-                                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                                        <Database className="w-6 h-6 mr-2 text-primary" />
-                                        How We Use Your Information
-                                    </h2>
-                                    <div className="space-y-4">
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Service Delivery</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>Provide access to streaming content</li>
-                                                    <li>Personalize your viewing experience</li>
-                                                    <li>Process payments and subscriptions</li>
-                                                    <li>Send important service updates</li>
-                                                </ul>
-                                            </div>
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Improvement & Analytics</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>Analyze usage patterns to improve our service</li>
-                                                    <li>Develop new features and content</li>
-                                                    <li>Conduct research and analytics</li>
-                                                    <li>Prevent fraud and ensure security</li>
-                                                </ul>
-                                            </div>
+                                        <div>
+                                            <h3 className="text-base sm:text-lg font-medium mb-2">c) Cookies and Tracking Technologies</h3>
+                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base mb-2">
+                                                We use cookies and similar tools to:
+                                            </p>
+                                            <ul className="list-disc list-inside mt-2 space-y-1 text-foreground-muted text-sm sm:text-base ml-4">
+                                                <li>Authenticate users</li>
+                                                <li>Remember preferences</li>
+                                                <li>Analyze traffic and usage behavior</li>
+                                                <li>Personalize content</li>
+                                            </ul>
+                                            <p className="text-foreground-muted leading-relaxed text-sm sm:text-base mt-2">
+                                                You can control cookie preferences via your browser settings. Disabling cookies may affect your experience on our platform.
+                                            </p>
                                         </div>
                                     </div>
                                 </section>
 
                                 <Separator className="my-8" />
 
+                                {/* 2. How We Use Your Information */}
                                 <section>
-                                    <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                                        <Lock className="w-6 h-6 mr-2 text-primary" />
-                                        Data Security & Protection
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
+                                        <Database className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
+                                        2. How We Use Your Information
                                     </h2>
                                     <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            We implement industry-standard security measures to protect your personal information:
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            We use the collected information to:
                                         </p>
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Technical Safeguards</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>End-to-end encryption for sensitive data</li>
-                                                    <li>Secure data transmission (HTTPS/TLS)</li>
-                                                    <li>Regular security audits and updates</li>
-                                                    <li>Access controls and authentication</li>
-                                                </ul>
-                                            </div>
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Operational Safeguards</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>Limited access to personal data</li>
-                                                    <li>Employee training on data protection</li>
-                                                    <li>Incident response procedures</li>
-                                                    <li>Regular backup and recovery testing</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <Separator className="my-8" />
-
-                                <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Information Sharing</h2>
-                                    <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
-                                        </p>
-                                        <ul className="list-disc list-inside space-y-2 text-foreground-muted">
-                                            <li><strong>Service Providers:</strong> Trusted partners who help us operate our service (payment processors, cloud storage, analytics)</li>
-                                            <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety</li>
-                                            <li><strong>Business Transfers:</strong> In case of merger, acquisition, or sale of assets</li>
-                                            <li><strong>Consent:</strong> When you explicitly consent to sharing your information</li>
+                                        <ul className="list-disc list-inside space-y-2 text-foreground-muted text-sm sm:text-base ml-4">
+                                            <li>Create and manage user accounts</li>
+                                            <li>Provide access to content and features</li>
+                                            <li>Process payments and subscriptions</li>
+                                            <li>Improve platform performance and user experience</li>
+                                            <li>Offer personalized recommendations</li>
+                                            <li>Communicate important updates and promotional offers (you may opt out anytime)</li>
+                                            <li>Prevent fraud and ensure platform security</li>
                                         </ul>
                                     </div>
                                 </section>
 
                                 <Separator className="my-8" />
 
+                                {/* 3. Data Storage and Security */}
                                 <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Your Rights & Choices</h2>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 flex items-center">
+                                        <Lock className="w-5 h-5 sm:w-6 sm:h-6 mr-2 text-primary" />
+                                        3. Data Storage and Security
+                                    </h2>
                                     <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            You have the following rights regarding your personal information:
-                                        </p>
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Access & Control</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>View and update your account information</li>
-                                                    <li>Download your data</li>
-                                                    <li>Delete your account</li>
-                                                    <li>Opt-out of marketing communications</li>
-                                                </ul>
-                                            </div>
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium">Privacy Settings</h3>
-                                                <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                                    <li>Control data collection preferences</li>
-                                                    <li>Manage viewing history</li>
-                                                    <li>Adjust recommendation settings</li>
-                                                    <li>Set parental controls</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <Separator className="my-8" />
-
-                                <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Cookies & Tracking</h2>
-                                    <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            We use cookies and similar technologies to enhance your experience:
-                                        </p>
-                                        <div className="grid md:grid-cols-3 gap-4">
-                                            <div className="p-4 bg-primary/5 rounded-lg">
-                                                <h3 className="font-medium mb-2">Essential Cookies</h3>
-                                                <p className="text-sm text-foreground-muted">Required for basic site functionality and security</p>
-                                            </div>
-                                            <div className="p-4 bg-primary/5 rounded-lg">
-                                                <h3 className="font-medium mb-2">Analytics Cookies</h3>
-                                                <p className="text-sm text-foreground-muted">Help us understand how you use our service</p>
-                                            </div>
-                                            <div className="p-4 bg-primary/5 rounded-lg">
-                                                <h3 className="font-medium mb-2">Preference Cookies</h3>
-                                                <p className="text-sm text-foreground-muted">Remember your settings and preferences</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <Separator className="my-8" />
-
-                                <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Children's Privacy</h2>
-                                    <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            Cinesaga is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13, we will take steps to delete such information.
-                                        </p>
-                                    </div>
-                                </section>
-
-                                <Separator className="my-8" />
-
-                                <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Changes to This Policy</h2>
-                                    <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            We may update this Privacy Policy from time to time. We will notify you of any material changes by:
-                                        </p>
-                                        <ul className="list-disc list-inside space-y-1 text-foreground-muted">
-                                            <li>Posting the updated policy on our website</li>
-                                            <li>Sending you an email notification</li>
-                                            <li>Displaying a notice in our service</li>
+                                        <ul className="list-disc list-inside space-y-2 text-foreground-muted text-sm sm:text-base ml-4">
+                                            <li>All data is stored on secure servers with encryption and restricted access.</li>
+                                            <li>We implement industry-standard practices (e.g., SSL encryption, firewalls) to protect your personal data.</li>
+                                            <li>Passwords and payment data are never stored in plain text.</li>
                                         </ul>
-                                        <p className="text-foreground-muted leading-relaxed mt-4">
-                                            Your continued use of our service after any changes constitutes acceptance of the updated policy.
+                                    </div>
+                                </section>
+
+                                <Separator className="my-8" />
+
+                                {/* 4. Sharing of Information */}
+                                <section>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+                                        4. Sharing of Information
+                                    </h2>
+                                    <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            We do not sell your personal data to third parties.
+                                        </p>
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            We may share limited data with:
+                                        </p>
+                                        <ul className="list-disc list-inside space-y-2 text-foreground-muted text-sm sm:text-base ml-4">
+                                            <li>Trusted third-party service providers (e.g., payment gateways, analytics tools) under strict data protection agreements.</li>
+                                            <li>Legal or regulatory authorities when required to comply with applicable laws or in response to valid legal requests.</li>
+                                        </ul>
+                                    </div>
+                                </section>
+
+                                <Separator className="my-8" />
+
+                                {/* 5. Your Rights and Choices */}
+                                <section>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+                                        5. Your Rights and Choices
+                                    </h2>
+                                    <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            You have the right to:
+                                        </p>
+                                        <ul className="list-disc list-inside space-y-2 text-foreground-muted text-sm sm:text-base ml-4">
+                                            <li>Access, update, or delete your account information</li>
+                                            <li>Withdraw consent for marketing emails</li>
+                                            <li>Request data deletion (subject to regulatory and legal retention requirements)</li>
+                                        </ul>
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            To exercise these rights, contact us at:
+                                        </p>
+                                        <div className="flex items-center space-x-3 mt-2">
+                                            <span className="text-foreground-muted">📧</span>
+                                            <span className="text-foreground">info.cinesaga@gmail.com</span>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <Separator className="my-8" />
+
+                                {/* 6. Children's Privacy */}
+                                <section>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+                                        6. Children's Privacy
+                                    </h2>
+                                    <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            Our platform is not intended for users under the age of 18. We do not knowingly collect data from minors. If you believe a child has provided personal data, contact us and we will delete it promptly.
                                         </p>
                                     </div>
                                 </section>
 
                                 <Separator className="my-8" />
 
+                                {/* 7. Updates to This Policy */}
                                 <section>
-                                    <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+                                        7. Updates to This Policy
+                                    </h2>
                                     <div className="space-y-4">
-                                        <p className="text-foreground-muted leading-relaxed">
-                                            If you have any questions about this Privacy Policy or our data practices, please contact us:
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            We may update this Privacy Policy from time to time. Changes will be reflected on this page with the "Last Updated" date. Continued use of the platform implies acceptance of the revised terms.
+                                        </p>
+                                    </div>
+                                </section>
+
+                                <Separator className="my-8" />
+
+                                {/* 8. Contact Us */}
+                                <section>
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
+                                        8. Contact Us
+                                    </h2>
+                                    <div className="space-y-4">
+                                        <p className="text-foreground-muted leading-relaxed text-sm sm:text-base">
+                                            For questions, concerns, or complaints regarding this Privacy Policy, contact:
                                         </p>
                                         <div className="grid md:grid-cols-2 gap-6">
                                             <div className="space-y-3">
                                                 <div className="flex items-center space-x-3">
-                                                    <Mail className="w-5 h-5 text-primary" />
-                                                    <span className="text-foreground-muted">info.cinesaga@gmail.com</span>
+                                                    <span className="text-foreground-muted">📧 Email:</span>
+                                                    <span className="text-foreground">info.cinesaga@gmail.com</span>
                                                 </div>
                                                 <div className="flex items-center space-x-3">
-                                                    <Phone className="w-5 h-5 text-primary" />
-                                                    <span className="text-foreground-muted">+918282979209</span>
-                                                </div>
-                                            </div>
-                                            <div className="space-y-3">
-                                                <div className="flex items-center space-x-3">
-                                                    <Calendar className="w-5 h-5 text-primary" />
-                                                    <span className="text-foreground-muted">Monday - Friday, 9 AM - 6 PM EST</span>
+                                                    <span className="text-foreground-muted">📞 Phone:</span>
+                                                    <span className="text-foreground">+91 82829 79209</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -299,3 +285,4 @@ const PrivacyPolicy = () => {
 };
 
 export default PrivacyPolicy;
+

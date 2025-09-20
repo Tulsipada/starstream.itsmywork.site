@@ -53,7 +53,7 @@ const Navigation = () => {
             <div className="hidden md:flex items-center space-x-6">
               <Link to="/" className="nav-link">Home</Link>
               <Link to="/movies" className="nav-link">Movies</Link>
-              <Link to="/prelaunch-offers" className="nav-link">Pre-Launch Offers</Link>
+              <Link to="/prelaunch-offers" className="nav-link">Pre-Launch</Link>
               <Link to="/watchlist" className="nav-link">Watchlist</Link>
               <Link to="/watch-history" className="nav-link">History</Link>
               <Link to="/contact" className="nav-link">Contact</Link>

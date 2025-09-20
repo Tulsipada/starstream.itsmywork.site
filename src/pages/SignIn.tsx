@@ -142,8 +142,12 @@ const SignIn = () => {
         <Card className="backdrop-blur-xl bg-background/98 border-border/30 shadow-2xl ring-1 ring-primary/10">
           <CardHeader className="space-y-4 text-center pb-8">
             {/* Enhanced Logo */}
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary via-primary to-accent rounded-2xl flex items-center justify-center mb-4 shadow-lg ring-2 ring-primary/20">
-              <span className="text-3xl font-bold text-primary-foreground">C</span>
+            <div className="mx-auto mb-4">
+              <img
+                src="/assets/logos/cinesaga-logo.png"
+                alt="Cinesaga"
+                className="h-12 sm:h-16 w-auto"
+              />
             </div>
 
             {/* Enhanced Title */}

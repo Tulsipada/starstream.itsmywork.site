@@ -41,13 +41,11 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="mb-8">
             <div className="mb-4">
-              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-6 py-4 border-2 border-gray-300 shadow-lg inline-block">
-                <img
-                  src="/assets/logos/cinesaga-logo.jpg"
-                  alt="Cinesaga"
-                  className="h-10 sm:h-14 w-auto"
-                />
-              </div>
+              <img
+                src="/assets/logos/cinesaga-logo.png"
+                alt="Cinesaga"
+                className="h-20 sm:h-24 lg:h-28 w-auto inline-block"
+              />
             </div>
             <p className="text-foreground-muted text-lg max-w-2xl mx-auto leading-relaxed">
               Your ultimate destination for premium entertainment. Discover amazing movies,

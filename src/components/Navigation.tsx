@@ -42,13 +42,11 @@ const Navigation = () => {
           {/* Logo */}
           <div className="flex items-center space-x-4 sm:space-x-8">
             <Link to="/" className="flex items-center">
-              <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 border-2 border-gray-300 shadow-lg">
-                <img
-                  src="/assets/logos/cinesaga-logo.jpg"
-                  alt="Cinesaga"
-                  className="h-6 sm:h-8 lg:h-10 w-auto"
-                />
-              </div>
+              <img
+                src="/assets/logos/cinesaga-logo.png"
+                alt="Cinesaga"
+                className="h-12 sm:h-16 lg:h-20 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation Links */}

@@ -10,6 +10,8 @@ interface Video {
   duration?: string;
   year?: string;
   rating?: string;
+  views?: string;
+  author?: string;
 }
 
 interface VideoCarouselProps {
@@ -121,9 +123,9 @@ const VideoCarousel = ({ title, videos }: VideoCarouselProps) => {
                   {video.title}
                 </h3>
                 <div className="flex items-center space-x-1 sm:space-x-2 text-xs text-foreground-muted">
-                  {video.year && <span>{video.year}</span>}
-                  {video.duration && <span className="hidden sm:inline">• {video.duration}</span>}
-                  {video.rating && <span>• {video.rating}</span>}
+                  {video.author && <span className="line-clamp-1">{video.author}</span>}
+                  {video.views && <span className="hidden sm:inline">• {video.views}</span>}
+                  {video.duration && <span>• {video.duration}</span>}
                 </div>
               </div>
 

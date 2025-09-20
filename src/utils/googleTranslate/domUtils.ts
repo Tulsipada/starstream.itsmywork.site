@@ -7,7 +7,6 @@ export const ensureContainerExists = (): HTMLElement => {
   let container = document.getElementById(TRANSLATE_ELEMENT_ID);
   
   if (!container) {
-    console.log(`Creating ${TRANSLATE_ELEMENT_ID} container`);
     container = document.createElement('div');
     container.id = TRANSLATE_ELEMENT_ID;
     container.style.display = 'block';
@@ -63,12 +62,10 @@ export const setLanguageCookies = (languageCode: string): void => {
     console.error('Error setting localStorage:', e);
   }
   
-  console.log(`Set language cookies for ${languageCode}`);
   
   // Check if cookies were actually set
   setTimeout(() => {
     const currentLang = getCurrentLanguageFromCookie();
-    console.log(`After setting cookies, current language is: ${currentLang}`);
     
     if (currentLang !== languageCode) {
       console.warn(`Cookie setting failed! Expected ${languageCode}, got ${currentLang}`);
@@ -123,7 +120,6 @@ export const clearTranslationCookies = (): void => {
     console.error('Error clearing localStorage:', e);
   }
   
-  console.log("Cleared all translation cookies");
 };
 
 // Get current language from cookie with more reliable detection
@@ -186,12 +182,10 @@ export const hasTranslatedClass = (): boolean => {
 
 // Change language using DOM selection
 export const changeLanguageUsingDOM = (languageCode: string): boolean => {
-  console.log('Attempting to change language using DOM manipulation');
   
   // Try using select dropdown
   const selectElement = document.querySelector(SELECTORS.TRANSLATE_COMBO) as HTMLSelectElement;
   if (selectElement) {
-    console.log('Found translate dropdown, changing selection');
     selectElement.value = languageCode;
     
     // Create and dispatch both change and input events
@@ -203,7 +197,6 @@ export const changeLanguageUsingDOM = (languageCode: string): boolean => {
   
   // Try using new interface links
   const translateLinks = document.querySelectorAll(SELECTORS.TRANSLATE_LINKS);
-  console.log(`Found ${translateLinks.length} translate links`);
   
   if (translateLinks.length > 0) {
     // Click to open menu
@@ -227,7 +220,6 @@ export const findAndClickLanguageInMenu = (languageCode: string): void => {
         // Try data attribute selector
         const dataSelector = SELECTORS.LANGUAGE_DATA.replace('{code}', languageCode);
         const langItems = document.querySelectorAll(dataSelector);
-        console.log(`Found ${langItems.length} language items with data-language-code`);
         
         if (langItems.length > 0) {
           (langItems[0] as HTMLElement).click();
@@ -236,7 +228,6 @@ export const findAndClickLanguageInMenu = (languageCode: string): void => {
         
         // Try finding by menu items
         const menuItems = document.querySelectorAll(SELECTORS.LANGUAGE_ITEMS);
-        console.log(`Found ${menuItems.length} language menu items`);
         
         if (menuItems.length > 0) {
           // Look for the item containing our language code
@@ -269,9 +260,7 @@ export const findAndClickLanguageInMenu = (languageCode: string): void => {
 
 // Find and interact with translate iframe - with improved targeting
 export const changeLanguageUsingIframe = (languageCode: string): boolean => {
-  console.log('Attempting to change language using iframe method');
   const frames = document.querySelectorAll(SELECTORS.TRANSLATE_FRAMES);
-  console.log(`Found ${frames.length} potential Google Translate frames`);
   
   if (frames.length > 0) {
     try {
@@ -290,7 +279,6 @@ export const changeLanguageUsingIframe = (languageCode: string): boolean => {
       
       return true;
     } catch (e) {
-      console.log('Error accessing iframe content:', e);
     }
   }
   

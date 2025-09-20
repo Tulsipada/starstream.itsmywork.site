@@ -2,45 +2,57 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, Plus, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import heroesData from "@/data/heroes.json";
+import videosData from "@/data/videos.json";
 
 const HeroSlider = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Use first 3 videos for hero slider with proper mapping
+  const heroVideos = videosData.slice(0, 3).map(video => ({
+    id: video.id,
+    title: video.title,
+    thumbnailUrl: video.thumbnailUrl,
+    videoUrl: video.videoUrl,
+    description: video.description,
+    author: video.author,
+    duration: video.duration,
+    uploadTime: video.uploadTime,
+    views: video.views,
+    isLive: video.isLive
+  }));
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroesData.length);
+      setCurrentSlide((prev) => (prev + 1) % heroVideos.length);
     }, 8000); // Auto-slide every 8 seconds
 
     return () => clearInterval(timer);
-  }, []);
+  }, [heroVideos.length]);
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroesData.length);
+    setCurrentSlide((prev) => (prev + 1) % heroVideos.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroesData.length) % heroesData.length);
+    setCurrentSlide((prev) => (prev - 1 + heroVideos.length) % heroVideos.length);
   };
 
-  const handleWatchNow = (heroId: string) => {
-    console.log('Hero button clicked, navigating to:', `/watch/${heroId}`);
-    console.log('Hero data:', heroesData.find(h => h.id === heroId));
-    navigate(`/watch/${heroId}`);
+  const handleWatchNow = (videoId: string) => {
+    navigate(`/watch/${videoId}`);
   };
 
-  const currentHero = heroesData[currentSlide];
+  const currentHero = heroVideos[currentSlide];
 
   return (
     <section className="relative h-screen overflow-hidden min-h-[600px] sm:min-h-screen hero-section">
       {/* Hero Slides */}
       <div className="relative w-full h-full">
-        {heroesData.map((hero, index) => (
+        {heroVideos.map((hero, index) => (
            <div
              key={hero.id}
              className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide
@@ -51,7 +63,7 @@ const HeroSlider = () => {
             {/* Background Image */}
             <div className="absolute inset-0 hero-bg-image">
               <img
-                src={hero.backgroundImage}
+                src={hero.thumbnailUrl}
                 alt={hero.title}
                 className="w-full h-full object-cover object-center hero-image"
                 style={{
@@ -73,7 +85,7 @@ const HeroSlider = () => {
                  <div className="max-w-2xl space-y-4 sm:space-y-6 animate-fade-in relative z-30">
                   <div className="space-y-2">
                     <p className="text-accent font-medium text-sm sm:text-lg tracking-wide uppercase">
-                      {hero.subtitle}
+                      {hero.author}
                     </p>
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight">
                       {hero.title}
@@ -106,7 +118,6 @@ const HeroSlider = () => {
                        onClick={(e) => {
                          e.preventDefault();
                          e.stopPropagation();
-                         console.log('Watch Now button clicked!');
                          handleWatchNow(hero.id);
                        }}
                        className="bg-primary hover:bg-primary-dark text-primary-foreground px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold relative z-50"
@@ -169,7 +180,7 @@ const HeroSlider = () => {
       {/* Slide Indicators */}
       <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2">
         <div className="flex space-x-1 sm:space-x-2">
-          {heroesData.map((_, index) => (
+          {heroVideos.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}

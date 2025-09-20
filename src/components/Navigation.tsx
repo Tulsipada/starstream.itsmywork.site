@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import GoogleTranslate from "./GoogleTranslate";
 import SimpleTranslate from "./SimpleTranslate";
-import cinesagaLogo from "@/assets/logos/cinesaga-logo.jpg";
+// Using public folder path instead of import
 import { useDropdownPreventShake } from "@/hooks/use-dropdown-prevent-shake";
 
 const Navigation = () => {
@@ -44,7 +44,7 @@ const Navigation = () => {
             <Link to="/" className="flex items-center">
               <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 border-2 border-gray-300 shadow-lg">
                 <img
-                  src={cinesagaLogo}
+                  src="/assets/logos/cinesaga-logo.jpg"
                   alt="Cinesaga"
                   className="h-6 sm:h-8 lg:h-10 w-auto"
                 />

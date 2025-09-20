@@ -2,27 +2,46 @@ import { useState, useEffect, useRef } from "react";
 import { Play, Plus, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import heroesData from "@/data/heroes.json";
+import videosData from "@/data/videos.json";
 
 const MobileHeroSection = () => {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
 
+    // Use first 3 videos for mobile hero section
+    const mobileVideos = videosData.slice(0, 3).map(video => ({
+        id: video.id,
+        title: video.title,
+        thumbnailUrl: video.thumbnailUrl,
+        videoUrl: video.videoUrl,
+        description: video.description,
+        author: video.author,
+        duration: video.duration,
+        uploadTime: video.uploadTime,
+        views: video.views,
+        isLive: video.isLive
+    }));
+
+    // Debug logging for mobile videos
+    console.log('Mobile Hero - Videos loaded:', mobileVideos.length);
+    console.log('Mobile Hero - Video IDs:', mobileVideos.map(v => v.id));
+    console.log('Mobile Hero - Current slide:', currentSlide);
+
+
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % heroesData.length);
+            setCurrentSlide((prev) => {
+                const newSlide = (prev + 1) % mobileVideos.length;
+                console.log(`Mobile Hero - Auto-sliding from ${prev} to ${newSlide}`);
+                return newSlide;
+            });
         }, 6000); // Faster auto-slide for mobile
 
         return () => clearInterval(timer);
-    }, []);
+    }, [mobileVideos.length]);
 
     const goToSlide = (index: number) => {
         setCurrentSlide(index);
-    };
-
-
-    const handleWatchNow = (heroId: string) => {
-        navigate(`/watch/${heroId}`);
     };
 
     // Swipe functionality
@@ -47,17 +66,51 @@ const MobileHeroSection = () => {
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
 
+        console.log(`Mobile Hero - Swipe detected: distance=${distance}, isLeftSwipe=${isLeftSwipe}, isRightSwipe=${isRightSwipe}`);
+
         if (isLeftSwipe) {
             // Swipe left - go to next slide
-            setCurrentSlide((prev) => (prev + 1) % heroesData.length);
+            setCurrentSlide((prev) => {
+                const newSlide = (prev + 1) % mobileVideos.length;
+                console.log(`Mobile Hero - Swipe left: ${prev} -> ${newSlide}`);
+                return newSlide;
+            });
         }
         if (isRightSwipe) {
             // Swipe right - go to previous slide
-            setCurrentSlide((prev) => (prev - 1 + heroesData.length) % heroesData.length);
+            setCurrentSlide((prev) => {
+                const newSlide = (prev - 1 + mobileVideos.length) % mobileVideos.length;
+                console.log(`Mobile Hero - Swipe right: ${prev} -> ${newSlide}`);
+                return newSlide;
+            });
         }
     };
 
-    const currentHero = heroesData[currentSlide];
+    const currentHero = mobileVideos[currentSlide];
+
+    const handleWatchNow = () => {
+        console.log('=== MOBILE HERO BUTTON CLICKED ===');
+        console.log('Current slide index:', currentSlide);
+        console.log('Current hero (at currentSlide):', currentHero);
+        console.log('Current hero ID:', currentHero?.id);
+        console.log('Current hero title:', currentHero?.title);
+        console.log('All mobile videos:', mobileVideos.map(v => ({ id: v.id, title: v.title })));
+        console.log('Navigating to:', `/watch/${currentHero?.id}`);
+        console.log('==================================');
+        navigate(`/watch/${currentHero?.id}`);
+    };
+
+    // Don't render if no videos
+    if (!mobileVideos.length || !currentHero) {
+        return (
+            <section className="relative h-96 sm:h-[500px] overflow-hidden mobile-hero-section bg-background flex items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-xl font-bold text-foreground mb-2">No Videos Available</h2>
+                    <p className="text-foreground-muted">Please check back later for new content.</p>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section
@@ -69,7 +122,7 @@ const MobileHeroSection = () => {
         >
             {/* Hero Slides */}
             <div className="relative w-full h-full">
-                {heroesData.map((hero, index) => (
+                {mobileVideos.map((hero, index) => (
                     <div
                         key={hero.id}
                         className={`absolute inset-0 transition-all duration-800 ease-in-out ${index === currentSlide
@@ -80,7 +133,7 @@ const MobileHeroSection = () => {
                         {/* Mobile-Optimized Background Image */}
                         <div className="absolute inset-0 mobile-hero-bg">
                             <img
-                                src={hero.backgroundImage}
+                                src={hero.thumbnailUrl}
                                 alt={hero.title}
                                 className="w-full h-full object-contain object-center mobile-hero-image"
                                 style={{
@@ -101,9 +154,9 @@ const MobileHeroSection = () => {
                         <div className="relative z-10 flex items-end h-full pb-6">
                             <div className="w-full px-4">
                                 <div className="space-y-3 animate-fade-in">
-                                    {/* Subtitle */}
+                                    {/* Author */}
                                     <p className="text-accent font-medium text-xs tracking-wide uppercase">
-                                        {hero.subtitle}
+                                        {hero.author}
                                     </p>
 
                                     {/* Title */}
@@ -114,11 +167,11 @@ const MobileHeroSection = () => {
                                     {/* Mobile Metadata */}
                                     <div className="flex items-center space-x-2 text-foreground-muted text-sm">
                                         <span className="bg-accent/20 text-accent px-3 py-1 rounded text-sm font-medium">
-                                            {hero.year}
+                                            {hero.uploadTime}
                                         </span>
-                                        <span>{hero.rating}</span>
+                                        <span>{hero.duration}</span>
                                         <span>•</span>
-                                        <span className="truncate">{hero.genre.split(',')[0]}</span>
+                                        <span className="truncate">{hero.views}</span>
                                     </div>
 
                                     {/* Mobile Description */}
@@ -130,7 +183,19 @@ const MobileHeroSection = () => {
                                     <div className="flex space-x-3 pt-2">
                                         <Button
                                             size="sm"
-                                            onClick={() => handleWatchNow(hero.id)}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                console.log('=== WATCH NOW BUTTON CLICKED ===');
+                                                console.log('Hero being clicked:', hero);
+                                                console.log('Hero ID:', hero.id);
+                                                console.log('Hero title:', hero.title);
+                                                console.log('Current slide index:', currentSlide);
+                                                console.log('Is this the current slide?', index === currentSlide);
+                                                console.log('Button index in map:', index);
+                                                console.log('================================');
+                                                handleWatchNow();
+                                            }}
                                             className="bg-primary hover:bg-primary-dark text-primary-foreground px-6 py-3 text-sm font-semibold flex-1 rounded-lg min-w-0"
                                         >
                                             <Play className="w-4 h-4 mr-2" fill="currentColor" />
@@ -139,7 +204,19 @@ const MobileHeroSection = () => {
                                         <Button
                                             variant="secondary"
                                             size="sm"
-                                            onClick={() => handleWatchNow(hero.id)}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                console.log('=== PLUS BUTTON CLICKED ===');
+                                                console.log('Hero being clicked:', hero);
+                                                console.log('Hero ID:', hero.id);
+                                                console.log('Hero title:', hero.title);
+                                                console.log('Current slide index:', currentSlide);
+                                                console.log('Is this the current slide?', index === currentSlide);
+                                                console.log('Button index in map:', index);
+                                                console.log('==========================');
+                                                handleWatchNow();
+                                            }}
                                             className="px-4 py-3 text-sm font-semibold rounded-lg flex-shrink-0"
                                         >
                                             <Plus className="w-4 h-4" />
@@ -156,7 +233,7 @@ const MobileHeroSection = () => {
             {/* Mobile Slide Indicators */}
             <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2">
                 <div className="flex space-x-2">
-                    {heroesData.map((_, index) => (
+                    {mobileVideos.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => goToSlide(index)}

@@ -89,7 +89,6 @@ const PreLaunchOffers = () => {
     const handleSelectPlan = (planId: string) => {
         setSelectedPlan(planId);
         // Here you would typically redirect to payment or show a modal
-        console.log(`Selected plan: ${planId}`);
     };
 
     return (

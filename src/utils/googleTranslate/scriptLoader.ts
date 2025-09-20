@@ -11,23 +11,19 @@ let scriptLoadAttempts = 0;
 // Add Google Translate script to page
 export const loadTranslateScript = (): void => {
   if (isScriptLoading || scriptLoadAttempts >= MAX_SCRIPT_LOAD_ATTEMPTS) {
-    console.log(`Script ${isScriptLoading ? 'already loading' : 'max attempts reached'}, skipping load`);
     return;
   }
   
-  console.log('Loading Google Translate script');
   isScriptLoading = true;
   scriptLoadAttempts++;
   
   // Define callback function
   window.googleTranslateElementInit = () => {
-    console.log('Google Translate callback triggered');
     isScriptLoading = false;
     isScriptLoaded = true;
     
     try {
       if (window.google && window.google.translate && window.google.translate.TranslateElement) {
-        console.log('Creating TranslateElement');
         new window.google.translate.TranslateElement(
           {
             pageLanguage: 'en',
@@ -50,12 +46,10 @@ export const loadTranslateScript = (): void => {
   script.src = `//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&_=${timestamp}`;
   script.async = true;
   document.body.appendChild(script);
-  console.log('Google Translate script added to DOM');
   
   // Set timeout for script loading
   setTimeout(() => {
     if (isScriptLoading) {
-      console.log('Script loading timeout reached, resetting status');
       isScriptLoading = false;
     }
   }, 10000);

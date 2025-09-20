@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Clock, Play, Apple } from "lucide-react";
 import { Link } from "react-router-dom";
-import cinesagaLogo from "@/assets/logos/cinesaga-logo.jpg";
+// Using public folder path instead of import
 
 // Custom X (formerly Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (
@@ -43,7 +43,7 @@ const Footer = () => {
             <div className="mb-4">
               <div className="bg-white/95 backdrop-blur-sm rounded-lg px-6 py-4 border-2 border-gray-300 shadow-lg inline-block">
                 <img
-                  src={cinesagaLogo}
+                  src="/assets/logos/cinesaga-logo.jpg"
                   alt="Cinesaga"
                   className="h-10 sm:h-14 w-auto"
                 />

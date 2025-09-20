@@ -7,7 +7,6 @@ import { TRANSLATE_ELEMENT_ID, DEFAULT_LANGUAGES } from './constants';
 
 // Reset Google Translate to clear previous state
 export const resetGoogleTranslate = (): void => {
-  console.log('Resetting Google Translate');
   
   try {
     // First clear any translation cookies - this is the most important step
@@ -31,7 +30,6 @@ export const resetGoogleTranslate = (): void => {
     try {
       const iframes = document.querySelectorAll('iframe.goog-te-menu-frame, iframe.VIpgJd-ZVi9od-xl07Ob-OEVmcd, iframe.skiptranslate');
       if (iframes.length > 0) {
-        console.log(`Found ${iframes.length} translate iframes, removing them`);
         iframes.forEach(iframe => {
           try {
             iframe.remove();
@@ -76,7 +74,6 @@ export const resetGoogleTranslate = (): void => {
             if (typeof instance.restore === 'function') {
               try {
                 instance.restore();
-                console.log("Called TranslateElement.restore()");
               } catch (e) {
                 console.error('Error using TranslateElement restore function:', e);
               }
@@ -85,7 +82,6 @@ export const resetGoogleTranslate = (): void => {
             if (typeof instance.reset === 'function') {
               try {
                 instance.reset();
-                console.log("Called TranslateElement.reset()");
               } catch (e) {
                 console.error('Error using TranslateElement reset function:', e);
               }
@@ -211,7 +207,6 @@ export const resetGoogleTranslate = (): void => {
                 multilanguagePage: true
               }
             );
-            console.log("Recreated TranslateElement");
           }
         }, 300);
       }

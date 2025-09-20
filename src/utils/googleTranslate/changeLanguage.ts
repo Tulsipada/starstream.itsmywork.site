@@ -7,7 +7,6 @@ import { resetGoogleTranslate } from './resetTranslate';
 
 // Try multiple methods for language changing
 export const changeLanguage = (languageCode: string): boolean => {
-  console.log(`Attempting to change language to: ${languageCode}`);
   let success = false;
   
   try {
@@ -37,7 +36,6 @@ export const changeLanguage = (languageCode: string): boolean => {
           }
         });
         
-        console.log("English language change result: success");
         
         // Force a clean reload with URL parameters to ensure clean state
         const cleanUrl = new URL(window.location.href);
@@ -165,7 +163,6 @@ export const changeLanguage = (languageCode: string): boolean => {
         console.error('Error forcing layout recalculation:', e);
       }
       
-      console.log("English language change result: success");
       return true;
     }
     
@@ -185,7 +182,6 @@ export const changeLanguage = (languageCode: string): boolean => {
     
     // Method 5: Force meta refresh with language parameter
     if (!success && languageCode !== 'en') {
-      console.log(`Using force reload for language: ${languageCode}`);
       
       // Set a session storage flag to indicate intent
       sessionStorage.setItem('forceLanguage', languageCode);
@@ -208,12 +204,10 @@ export const changeLanguage = (languageCode: string): boolean => {
     }
     
     if (!success) {
-      console.log('Could not find any Google Translate interface to change language');
     }
     
     return success;
   } catch (e) {
-    console.log('Error changing language:', e);
     return false;
   }
 };

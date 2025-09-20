@@ -3,25 +3,20 @@
 
 // Attempt to use Google Translate API for language change
 export const changeLanguageUsingAPI = (languageCode: string): boolean => {
-  console.log('Attempting to change language using API method');
   
   if (window.google && window.google.translate) {
-    console.log('Google translate object exists');
     
     try {
       if (typeof window.google.translate.TranslateElement.getInstance === 'function') {
         const instance = window.google.translate.TranslateElement.getInstance();
         
         if (instance && typeof instance.selectLanguage === 'function') {
-          console.log('Using TranslateElement.getInstance().selectLanguage()');
           instance.selectLanguage(languageCode);
           return true;
         } else {
-          console.log('TranslateElement.getInstance() exists but selectLanguage is not available');
         }
       }
     } catch (e) {
-      console.log('Error using TranslateElement API:', e);
     }
   }
   

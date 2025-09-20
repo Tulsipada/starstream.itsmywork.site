@@ -56,23 +56,18 @@ const SimpleTranslate = () => {
     // Initialize Google Translate and check for stored language
     useEffect(() => {
         // Initialize Google Translate on every page
-        console.log('SimpleTranslate: Initializing Google Translate on page:', window.location.pathname);
-        console.log('SimpleTranslate: Current URL:', window.location.href);
         
         // Special handling for home page - ensure Google Translate script is loaded
         if (window.location.pathname === '/') {
-            console.log('SimpleTranslate: Home page detected, ensuring Google Translate script is loaded');
             
             // Check if Google Translate script is loaded
             if (!(window as any).google || !(window as any).google.translate) {
-                console.log('SimpleTranslate: Google Translate script not loaded on home page, loading it');
                 
                 // Load the Google Translate script
                 const script = document.createElement('script');
                 script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
                 script.async = true;
                 script.onload = () => {
-                    console.log('SimpleTranslate: Google Translate script loaded on home page');
                     // Wait a bit for the script to initialize
                     setTimeout(() => {
                         initializeGoogleTranslate();
@@ -83,7 +78,6 @@ const SimpleTranslate = () => {
                 };
                 document.head.appendChild(script);
             } else {
-                console.log('SimpleTranslate: Google Translate script already loaded on home page');
                 initializeGoogleTranslate();
             }
         } else {
@@ -91,13 +85,10 @@ const SimpleTranslate = () => {
             // Force re-initialization by clearing any existing elements
             const existingElement = document.getElementById('google_translate_element');
             if (existingElement) {
-                console.log('SimpleTranslate: Clearing existing translate element');
                 existingElement.innerHTML = '';
             } else {
-                console.log('SimpleTranslate: No existing translate element found');
             }
             
-            console.log('SimpleTranslate: Calling initializeGoogleTranslate()');
             initializeGoogleTranslate();
         }
 
@@ -114,7 +105,6 @@ const SimpleTranslate = () => {
                 if (language) {
                     setCurrentLanguage(language);
                     localStorage.setItem('selectedLanguage', googtrans);
-                    console.log('Set current language from URL parameter and auto-translating:', language);
                     
                     // Auto-translate the page
                     setTimeout(() => {
@@ -128,13 +118,11 @@ const SimpleTranslate = () => {
                     const language = languages.find(lang => lang.code === savedLanguage);
                     if (language) {
                         setCurrentLanguage(language);
-                        console.log('Set current language from localStorage:', language);
 
                         // Apply the saved language to Google Translate and auto-translate
                         setTimeout(() => {
                             const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
                             if (selectElement && selectElement.value !== savedLanguage) {
-                                console.log('Applying saved language from localStorage and auto-translating:', savedLanguage);
                                 selectElement.value = savedLanguage;
                                 selectElement.dispatchEvent(new Event('change', { bubbles: true }));
                                 
@@ -153,7 +141,6 @@ const SimpleTranslate = () => {
                         if (language) {
                             setCurrentLanguage(language);
                             localStorage.setItem('selectedLanguage', cookieLanguage);
-                            console.log('Set current language from cookie and auto-translating:', language);
                             
                             // Auto-translate the page
                             setTimeout(() => {
@@ -169,7 +156,6 @@ const SimpleTranslate = () => {
     // Re-initialize translator when page changes (for SPA navigation)
     useEffect(() => {
         const handlePageChange = () => {
-            console.log('Page changed, re-initializing translator');
             setTimeout(() => {
                 // Clear existing element and re-initialize
                 const existingElement = document.getElementById('google_translate_element');
@@ -186,7 +172,6 @@ const SimpleTranslate = () => {
         // Also check periodically if translator is still working
         const checkInterval = setInterval(() => {
             const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-            console.log('SimpleTranslate: Periodic check - select element found:', !!selectElement, 'on page:', window.location.pathname);
             
             // Special handling for problematic pages
             const problematicPages = ['/prelaunch-offers', '/contact', '/'];
@@ -194,7 +179,6 @@ const SimpleTranslate = () => {
             const isHomePage = window.location.pathname === '/';
             
             if (!selectElement && isInitialized) {
-                console.log('Translator select element missing, re-initializing on page:', window.location.pathname);
                 // Clear existing element and re-initialize
                 const existingElement = document.getElementById('google_translate_element');
                 if (existingElement) {
@@ -203,15 +187,12 @@ const SimpleTranslate = () => {
                 
                 // For problematic pages, be more aggressive
                 if (isProblematicPage) {
-                    console.log('Problematic page detected, using aggressive re-initialization');
                     // Force reload the script if needed
                     if (!(window as any).google || !(window as any).google.translate) {
-                        console.log('Google Translate script missing, reloading...');
                         const script = document.createElement('script');
                         script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
                         script.async = true;
                         script.onload = () => {
-                            console.log('Google Translate script reloaded successfully');
                             setTimeout(() => {
                                 initializeGoogleTranslate();
                             }, 500);
@@ -224,7 +205,6 @@ const SimpleTranslate = () => {
                 
                 // Extra aggressive handling for home page
                 if (isHomePage) {
-                    console.log('Home page detected, using extra aggressive re-initialization');
                     
                     // Force clear all Google Translate state
                     document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -239,12 +219,10 @@ const SimpleTranslate = () => {
                     
                     // Force reload the script
                     if (!(window as any).google || !(window as any).google.translate) {
-                        console.log('Google Translate script missing on home page, reloading...');
                         const script = document.createElement('script');
                         script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
                         script.async = true;
                         script.onload = () => {
-                            console.log('Google Translate script reloaded on home page');
                             setTimeout(() => {
                                 initializeGoogleTranslate();
                             }, 1000);
@@ -277,7 +255,6 @@ const SimpleTranslate = () => {
                 const language = languages.find(lang => lang.code === status.currentValue);
                 if (language && language.code !== currentLanguage.code) {
                     setCurrentLanguage(language);
-                    console.log('Updated current language from select element and auto-translating:', language);
                     
                     // Auto-translate when language is detected from select element
                     if (language.code !== 'en') {
@@ -314,21 +291,17 @@ const SimpleTranslate = () => {
     };
 
     const handleLanguageChange = (language: Language) => {
-        console.log('Language change requested:', language);
         setCurrentLanguage(language);
         setIsTranslating(true); // Start loading state
 
         // Save to localStorage immediately
         localStorage.setItem('selectedLanguage', language.code);
-        console.log('Saved language to localStorage:', language.code);
         
         // Immediately trigger auto-translation
-        console.log('Auto-translating page to:', language.code);
         triggerGoogleTranslate(language.code);
 
         // SPECIAL HANDLING FOR ENGLISH - Force page reload immediately
         if (language.code === 'en') {
-            console.log('English selected - forcing immediate page reload for reliable reset');
 
             // AGGRESSIVE CLEARING before reload
             document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -374,14 +347,12 @@ const SimpleTranslate = () => {
         }
 
         // FORCE IMMEDIATE TRANSLATION: Use multiple aggressive methods
-        console.log('Forcing immediate translation with aggressive methods');
 
         // Method 1: Direct Google Translate API call
         if ((window as any).google && (window as any).google.translate) {
             try {
                 const translateElement = (window as any).google.translate.TranslateElement.getInstance();
                 if (translateElement && typeof translateElement.selectLanguage === 'function') {
-                    console.log('Using Google Translate API selectLanguage method');
                     if (language.code === 'en') {
                         // For English, try to reset to original language
                         translateElement.selectLanguage('en');
@@ -390,14 +361,12 @@ const SimpleTranslate = () => {
                     }
                 }
             } catch (e) {
-                console.log('Google Translate API method failed:', e);
             }
         }
 
         // Method 2: Aggressive select element manipulation
         const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
         if (selectElement) {
-            console.log('Using aggressive select element manipulation');
 
             // Clear any existing state first
             document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -440,7 +409,6 @@ const SimpleTranslate = () => {
         // Method 3: Try to find and click language links (newer Google Translate interface)
         const translateLink = document.querySelector('.goog-te-gadget a[aria-haspopup="true"]') as HTMLElement;
         if (translateLink) {
-            console.log('Found Google Translate link interface, attempting to use it');
             translateLink.click();
 
             setTimeout(() => {
@@ -448,7 +416,6 @@ const SimpleTranslate = () => {
                 const languageOption = document.querySelector(`[data-value="${language.code}"], [value="${language.code}"], a[href*="${language.code}"]`) as HTMLElement;
                 if (languageOption) {
                     languageOption.click();
-                    console.log('Clicked language option via link interface');
                 }
             }, 500);
         }
@@ -457,7 +424,6 @@ const SimpleTranslate = () => {
         setTimeout(() => {
             const iframe = document.querySelector('iframe[src*="translate.google.com"]') as HTMLIFrameElement;
             if (iframe) {
-                console.log('Found Google Translate iframe, attempting iframe manipulation');
                 try {
                     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
                     if (iframeDoc) {
@@ -474,11 +440,9 @@ const SimpleTranslate = () => {
                                 iframeSelect.value = language.code;
                             }
                             iframeSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                            console.log('Applied translation via iframe');
                         }
                     }
                 } catch (e) {
-                    console.log('Cannot access iframe content (CORS)');
                 }
             }
         }, 1000);
@@ -486,7 +450,6 @@ const SimpleTranslate = () => {
         // Method 5: Additional aggressive methods for English
         if (language.code === 'en') {
             setTimeout(() => {
-                console.log('Applying additional English reset methods');
 
                 // Clear all translation classes more aggressively
                 document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -510,7 +473,6 @@ const SimpleTranslate = () => {
                     const isStillTranslated = document.body.classList.contains('translated-ltr') ||
                         document.body.classList.contains('translated-rtl');
                     if (isStillTranslated) {
-                        console.log('Still translated after reset, forcing page reload');
                         window.location.reload();
                     }
                 }, 1000);
@@ -562,10 +524,8 @@ const SimpleTranslate = () => {
             if (language.code === 'en') {
                 // For English, check if translation classes are removed (meaning we're back to English)
                 if (!isTranslated) {
-                    console.log('English translation applied successfully - back to original language');
                     setIsTranslating(false); // Stop loading state
                 } else {
-                    console.log('English translation did not work, forcing page reload');
                     // Force page reload for English
                     const currentUrl = new URL(window.location.href);
                     currentUrl.searchParams.delete('googtrans');
@@ -578,10 +538,8 @@ const SimpleTranslate = () => {
             } else {
                 // For other languages, check if translation classes are present
                 if (isTranslated) {
-                    console.log('Translation applied successfully without page reload');
                     setIsTranslating(false); // Stop loading state
                 } else {
-                    console.log('Translation did not work with any method, forcing page reload');
                     // Force page reload as last resort
                     const currentUrl = new URL(window.location.href);
                     currentUrl.searchParams.delete('googtrans');
@@ -597,7 +555,6 @@ const SimpleTranslate = () => {
     };
 
     const handleReinitialize = () => {
-        console.log('Manually re-initializing translator on page:', window.location.pathname);
         const existingElement = document.getElementById('google_translate_element');
         if (existingElement) {
             existingElement.innerHTML = '';
@@ -605,12 +562,10 @@ const SimpleTranslate = () => {
         
         // Force reload the Google Translate script if it's not working
         if (!(window as any).google || !(window as any).google.translate) {
-            console.log('Google Translate script not loaded, reloading...');
             const script = document.createElement('script');
             script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
             script.async = true;
             script.onload = () => {
-                console.log('Google Translate script reloaded manually');
                 setTimeout(() => {
                     initializeGoogleTranslate();
                 }, 500);
@@ -624,14 +579,12 @@ const SimpleTranslate = () => {
     return (
         <div className="relative translator-container" ref={dropdownRef}
              onMouseEnter={() => {
-                 console.log('Mouse entered translator area');
                  setIsDropdownOpen(true);
              }}
              onMouseLeave={(e) => {
                  // Only close if mouse is leaving the entire translator area
                  const relatedTarget = e.relatedTarget as HTMLElement;
                  if (!dropdownRef.current?.contains(relatedTarget)) {
-                     console.log('Mouse left translator area completely');
                      setTimeout(() => {
                          setIsDropdownOpen(false);
                      }, 200);

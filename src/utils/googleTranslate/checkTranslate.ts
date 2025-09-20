@@ -11,7 +11,6 @@ export const isGoogleTranslateInitialized = (): boolean => {
   const hasNewInterface = !!document.querySelector(SELECTORS.TRANSLATE_LINKS);
   
   const result = hasComboBox || hasNewInterface;
-  console.log(`Checking for Google Translate initialization: ${result ? 'Found' : 'Not found'}`);
   return result;
 };
 

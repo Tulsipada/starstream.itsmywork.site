@@ -7,10 +7,8 @@ const GoogleTranslate = () => {
     const maxInitAttempts = 3;
 
     useEffect(() => {
-        console.log('GoogleTranslate component mounted');
 
         // AGGRESSIVE RESET: Clear all Google Translate state before initialization
-        console.log('Performing aggressive reset before initialization');
 
         // Clear all translation classes
         document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -36,14 +34,12 @@ const GoogleTranslate = () => {
         // Simple initialization without state dependency
         const initializeGoogleTranslate = () => {
             if (initAttemptsRef.current >= maxInitAttempts) {
-                console.log('Max initialization attempts reached');
                 return;
             }
 
             initAttemptsRef.current += 1;
 
             if ((window as any).google && (window as any).google.translate) {
-                console.log('Google Translate API available, initializing...');
 
                 try {
                     // Create the Google Translate element
@@ -59,14 +55,12 @@ const GoogleTranslate = () => {
                             gaId: null,
                         }, 'google_translate_element');
 
-                        console.log('Google Translate element created successfully');
 
                         // Wait for initialization to complete
                         setTimeout(() => {
                             const selectElement = document.querySelector('.goog-te-combo') as HTMLSelectElement;
                             if (selectElement) {
                                 setIsLoaded(true);
-                                console.log('Google Translate successfully initialized');
 
                                 // Handle URL parameters
                                 const urlParams = new URLSearchParams(window.location.search);
@@ -74,7 +68,6 @@ const GoogleTranslate = () => {
                                 const reset = urlParams.get('_reset');
 
                                 if (googtrans && googtrans !== 'en') {
-                                    console.log('Applying translation from URL parameter:', googtrans);
 
                                     // AGGRESSIVE RESET before applying new language
                                     document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -112,11 +105,9 @@ const GoogleTranslate = () => {
                                             try {
                                                 const translateElement = (window as any).google.translate.TranslateElement.getInstance();
                                                 if (translateElement && typeof translateElement.selectLanguage === 'function') {
-                                                    console.log('Using API selectLanguage for URL parameter');
                                                     translateElement.selectLanguage(googtrans);
                                                 }
                                             } catch (e) {
-                                                console.log('API method failed for URL parameter');
                                             }
                                         }
 
@@ -132,7 +123,6 @@ const GoogleTranslate = () => {
                                             }, i * 100);
                                         }
 
-                                        console.log('Translation applied from URL parameter');
                                     };
 
                                     // Apply immediately
@@ -149,7 +139,6 @@ const GoogleTranslate = () => {
 
                                 } else if (reset === 'true') {
                                     // Special handling for English reset
-                                    console.log('English reset detected - ensuring clean English state');
 
                                     // AGGRESSIVE ENGLISH RESET
                                     document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -201,7 +190,6 @@ const GoogleTranslate = () => {
 
                                 } else {
                                     // For English or no parameter, ensure we're in English state
-                                    console.log('Ensuring English state (no translation)');
 
                                     // AGGRESSIVE ENGLISH RESET
                                     document.body.classList.remove('translated-ltr', 'translated-rtl');
@@ -246,7 +234,6 @@ const GoogleTranslate = () => {
                                     }, 100);
                                 }
                             } else {
-                                console.log('Select element not found after initialization, retrying...');
                                 setTimeout(initializeGoogleTranslate, 1000);
                             }
                         }, 2000);
@@ -257,7 +244,6 @@ const GoogleTranslate = () => {
                     setTimeout(initializeGoogleTranslate, 1000);
                 }
             } else {
-                console.log('Google Translate API not ready yet, retrying...');
                 setTimeout(initializeGoogleTranslate, 200);
             }
         };

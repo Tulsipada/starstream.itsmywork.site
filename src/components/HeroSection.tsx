@@ -1,7 +1,7 @@
 import { Play, Plus, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/hero-series.jpg";
+// Using public folder path instead of import
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const HeroSection = () => {
       {/* Hero Image */}
       <div className="absolute inset-0">
         <img
-          src={heroImage}
+          src="/assets/heroes/hero-series.jpg"
           alt="The Chronicles of Avalon"
           className="w-full h-full object-cover"
         />

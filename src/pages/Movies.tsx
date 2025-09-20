@@ -66,12 +66,10 @@ const Movies = () => {
 
     const addToWatchlist = (id: string) => {
         // In a real app, this would call an API
-        console.log("Add to watchlist:", id);
     };
 
     const toggleFavorite = (id: string) => {
         // In a real app, this would call an API
-        console.log("Toggle favorite:", id);
     };
 
     // Get unique years for year filter

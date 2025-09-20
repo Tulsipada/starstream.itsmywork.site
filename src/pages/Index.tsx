@@ -9,19 +9,39 @@ import { Link } from "react-router-dom";
 import { Zap, Star } from "lucide-react";
 
 // Import data
-import moviesData from "@/data/movies.json";
-import categoriesData from "@/data/categories.json";
+import videosData from "@/data/videos.json";
 
 const Index = () => {
   const isMobile = useMobileDetection();
 
-  // Filter movies by category
-  const getMoviesByCategory = (categoryIds: string[]) => {
-    return categoryIds.map(id => moviesData.find(movie => movie.id === id)).filter(Boolean);
-  };
+  // Get videos for carousels with more dynamic categorization
+  const trendingMovies = videosData
+    .filter(video => video.isLive) // Live videos as trending
+    .slice(0, 4)
+    .map(video => ({
+      id: video.id,
+      title: video.title,
+      thumbnail: video.thumbnailUrl,
+      duration: video.duration,
+      year: video.uploadTime,
+      rating: "PG",
+      views: video.views,
+      author: video.author
+    }));
 
-  const trendingMovies = getMoviesByCategory(categoriesData.trending);
-  const popularMovies = getMoviesByCategory(categoriesData.popular);
+  const popularMovies = videosData
+    .filter(video => !video.isLive) // Non-live videos as popular
+    .slice(0, 4)
+    .map(video => ({
+      id: video.id,
+      title: video.title,
+      thumbnail: video.thumbnailUrl,
+      duration: video.duration,
+      year: video.uploadTime,
+      rating: "PG",
+      views: video.views,
+      author: video.author
+    }));
 
   return (
     <div className="min-h-screen bg-background">

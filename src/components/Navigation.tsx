@@ -1,16 +1,20 @@
-import { Search, User, Menu, X } from "lucide-react";
+import { Search, User, Menu, X, LogOut, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import GoogleTranslate from "./GoogleTranslate";
 import SimpleTranslate from "./SimpleTranslate";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLogout } from "@/hooks/useLogout";
 // Using public folder path instead of import
 import { useDropdownPreventShake } from "@/hooks/use-dropdown-prevent-shake";
 
 const Navigation = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
+  const { handleLogout } = useLogout();
 
   // Prevent page shaking when mobile menu is open
   useDropdownPreventShake(isMobileMenuOpen);
@@ -91,12 +95,32 @@ const Navigation = () => {
 
             {/* Auth Buttons */}
             <div className="hidden sm:flex items-center space-x-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/signin">Sign In</Link>
-              </Button>
-              <Button size="sm" asChild>
-                <Link to="/signup">Sign Up</Link>
-              </Button>
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-foreground-muted">
+                    Welcome, {user?.profile?.firstName || user?.email?.split('@')[0] || 'User'}
+                  </span>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/profile">
+                      <Settings className="w-4 h-4 mr-1" />
+                      Profile
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleLogout}>
+                    <LogOut className="w-4 h-4 mr-1" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/signin">Sign In</Link>
+                  </Button>
+                  <Button size="sm" asChild>
+                    <Link to="/signup">Sign Up</Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             {/* Mobile Profile Button */}
@@ -156,12 +180,34 @@ const Navigation = () => {
 
                 {/* Mobile Auth Buttons */}
                 <div className="flex flex-col space-y-2 pt-4 border-t border-border/20">
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link to="/signin" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
-                  </Button>
-                  <Button className="w-full" asChild>
-                    <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
-                  </Button>
+                  {isAuthenticated ? (
+                    <div className="space-y-2">
+                      <div className="text-center py-2">
+                        <span className="text-sm text-foreground-muted">
+                          Welcome, {user?.profile?.firstName || user?.email?.split('@')[0] || 'User'}
+                        </span>
+                      </div>
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>
+                          <Settings className="w-4 h-4 mr-2" />
+                          Edit Profile
+                        </Link>
+                      </Button>
+                      <Button variant="outline" className="w-full" onClick={handleLogout}>
+                        <LogOut className="w-4 h-4 mr-2" />
+                        Logout
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to="/signin" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
+                      </Button>
+                      <Button className="w-full" asChild>
+                        <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>Sign Up</Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

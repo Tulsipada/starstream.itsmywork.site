@@ -9,18 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, ArrowLeft, Star, Shield, Zap, LogIn } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLogin, useOtp } from "@/hooks/useAuth";
 
 const SignIn = () => {
-  const [step, setStep] = useState(1); // 1: Contact Info, 2: OTP Verification
+  const [step, setStep] = useState(1); // 1: Contact Info, 2: OTP Verification, 3: Password
   const [formData, setFormData] = useState({
     email: "",
     mobile: "",
+    password: "",
     authMethod: "email", // "email" or "mobile"
   });
   const [otp, setOtp] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { handleLogin, isLoading: isLoginLoading } = useLogin();
+  const { sendOtp, verifyOtp, isLoading: isOtpLoading } = useOtp();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -51,6 +54,18 @@ const SignIn = () => {
     return true;
   };
 
+  const validatePassword = () => {
+    if (!formData.password || formData.password.length < 6) {
+      toast({
+        title: "Password Required",
+        description: "Please enter a valid password (minimum 6 characters).",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
+
   const validateOTP = () => {
     if (!otp || otp.length !== 6) {
       toast({
@@ -68,17 +83,15 @@ const SignIn = () => {
 
     if (!validateContact()) return;
 
-    setIsLoading(true);
+    const success = await sendOtp({
+      identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+      type: formData.authMethod,
+      purpose: "verification",
+    });
 
-    // Simulate OTP sending
-    setTimeout(() => {
-      setIsLoading(false);
+    if (success) {
       setStep(2);
-      toast({
-        title: "OTP Sent!",
-        description: `We've sent a 6-digit OTP to your ${formData.authMethod === "email" ? "email" : "mobile number"}.`,
-      });
-    }, 1500);
+    }
   };
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
@@ -86,28 +99,36 @@ const SignIn = () => {
 
     if (!validateOTP()) return;
 
-    setIsLoading(true);
+    const success = await verifyOtp({
+      identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+      type: formData.authMethod,
+      otpCode: otp,
+      purpose: "verification",
+    });
 
-    // Simulate OTP verification
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in to Cinesaga.",
-      });
-      navigate("/");
-    }, 1500);
+    if (success) {
+      setStep(3);
+    }
   };
 
-  const handleResendOTP = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "OTP Resent!",
-        description: "A new OTP has been sent to your registered contact.",
-      });
-    }, 1000);
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validatePassword()) return;
+
+    await handleLogin({
+      identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+      password: formData.password,
+      type: formData.authMethod,
+    });
+  };
+
+  const handleResendOTP = async () => {
+    await sendOtp({
+      identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+      type: formData.authMethod,
+      purpose: "verification",
+    });
   };
 
   return (
@@ -136,6 +157,7 @@ const SignIn = () => {
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-primary scale-125' : 'bg-foreground-muted/30'}`} />
             <div className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-primary scale-125' : 'bg-foreground-muted/30'}`} />
+            <div className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 3 ? 'bg-primary scale-125' : 'bg-foreground-muted/30'}`} />
           </div>
         </div>
 
@@ -164,7 +186,9 @@ const SignIn = () => {
             <CardDescription className="text-foreground-muted text-base">
               {step === 1
                 ? "Sign in to your Cinesaga account to continue watching"
-                : "Verify your contact to complete sign in"
+                : step === 2
+                ? "Verify your contact to continue"
+                : "Enter your password to complete sign in"
               }
             </CardDescription>
           </CardHeader>
@@ -254,9 +278,9 @@ const SignIn = () => {
                 <Button
                   type="submit"
                   className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isLoading}
+                  disabled={isOtpLoading}
                 >
-                  {isLoading ? (
+                  {isOtpLoading ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                       <span>Sending OTP...</span>
@@ -269,7 +293,7 @@ const SignIn = () => {
                   )}
                 </Button>
               </form>
-            ) : (
+            ) : step === 2 ? (
               <form onSubmit={handleVerifyOTP} className="space-y-6">
                 {/* Enhanced OTP Verification Header */}
                 <div className="text-center space-y-4">
@@ -315,7 +339,7 @@ const SignIn = () => {
                     type="button"
                     variant="link"
                     onClick={handleResendOTP}
-                    disabled={isLoading}
+                    disabled={isOtpLoading}
                     className="p-0 h-auto text-primary hover:text-primary-dark font-medium"
                   >
                     Resend OTP
@@ -327,9 +351,9 @@ const SignIn = () => {
                   <Button
                     type="submit"
                     className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isLoading || otp.length !== 6}
+                    disabled={isOtpLoading || otp.length !== 6}
                   >
-                    {isLoading ? (
+                    {isOtpLoading ? (
                       <div className="flex items-center space-x-2">
                         <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                         <span>Verifying...</span>
@@ -337,7 +361,7 @@ const SignIn = () => {
                     ) : (
                       <div className="flex items-center space-x-2">
                         <LogIn className="w-4 h-4" />
-                        <span>Sign In</span>
+                        <span>Verify OTP</span>
                       </div>
                     )}
                   </Button>
@@ -352,6 +376,57 @@ const SignIn = () => {
                     Back to Contact
                   </Button>
                 </div>
+              </form>
+            ) : (
+              <form onSubmit={handlePasswordLogin} className="space-y-6">
+                {/* Enhanced Password Input */}
+                <div className="space-y-3">
+                  <Label htmlFor="password" className="text-sm font-semibold text-foreground">
+                    Password
+                  </Label>
+                  <div className="relative group">
+                    <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4 group-focus-within:text-primary transition-colors" />
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="pl-10 h-12 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Enhanced Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoginLoading}
+                >
+                  {isLoginLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      <span>Signing In...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <LogIn className="w-4 h-4" />
+                      <span>Sign In</span>
+                    </div>
+                  )}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(2)}
+                  className="w-full h-12 border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-200"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to OTP
+                </Button>
               </form>
             )}
 

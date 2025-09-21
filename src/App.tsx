@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import VideoPlayer from "./pages/VideoPlayer";
 import SignIn from "./pages/SignIn";
@@ -14,33 +15,37 @@ import Watchlist from "./pages/Watchlist";
 import Movies from "./pages/Movies";
 import ContactUs from "./pages/ContactUs";
 import PreLaunchOffers from "./pages/PreLaunchOffers";
+import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/watch/:id" element={<VideoPlayer />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/watch-history" element={<WatchHistory />} />
-          <Route path="/watchlist" element={<Watchlist />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/prelaunch-offers" element={<PreLaunchOffers />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/watch/:id" element={<VideoPlayer />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/watch-history" element={<WatchHistory />} />
+            <Route path="/watchlist" element={<Watchlist />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/prelaunch-offers" element={<PreLaunchOffers />} />
+            <Route path="/profile" element={<EditProfile />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

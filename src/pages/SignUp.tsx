@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Mail, Phone, User, ArrowLeft, Star, Shield, Zap, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useRegister, useOtp } from "@/hooks/useAuth";
 
 const SignUp = () => {
     const [step, setStep] = useState(1); // 1: Basic Info, 2: OTP Verification
@@ -18,13 +19,15 @@ const SignUp = () => {
         lastName: "",
         email: "",
         mobile: "",
+        password: "",
         authMethod: "email", // "email" or "mobile"
     });
     const [otp, setOtp] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
     const [agreedToTerms, setAgreedToTerms] = useState(false);
     const { toast } = useToast();
     const navigate = useNavigate();
+    const { handleRegister, isLoading: isRegisterLoading } = useRegister();
+    const { sendOtp, verifyOtp, isLoading: isOtpLoading } = useOtp();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -38,6 +41,15 @@ const SignUp = () => {
             toast({
                 title: "Validation Error",
                 description: "Please enter your first and last name.",
+                variant: "destructive",
+            });
+            return false;
+        }
+
+        if (!formData.password || formData.password.length < 6) {
+            toast({
+                title: "Password Required",
+                description: "Please enter a valid password (minimum 6 characters).",
                 variant: "destructive",
             });
             return false;
@@ -90,17 +102,15 @@ const SignUp = () => {
 
         if (!validateBasicInfo()) return;
 
-        setIsLoading(true);
+        const success = await sendOtp({
+            identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+            type: formData.authMethod,
+            purpose: "registration",
+        });
 
-        // Simulate OTP sending
-        setTimeout(() => {
-            setIsLoading(false);
+        if (success) {
             setStep(2);
-            toast({
-                title: "OTP Sent!",
-                description: `We've sent a 6-digit OTP to your ${formData.authMethod === "email" ? "email" : "mobile number"}.`,
-            });
-        }, 1500);
+        }
     };
 
     const handleVerifyOTP = async (e: React.FormEvent) => {
@@ -108,28 +118,33 @@ const SignUp = () => {
 
         if (!validateOTP()) return;
 
-        setIsLoading(true);
+        // const success = await verifyOtp({
+        //     identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+        //     type: formData.authMethod,
+        //     otpCode: otp,
+        //     purpose: "registration",
+        // });
 
-        // Simulate OTP verification
-        setTimeout(() => {
-            setIsLoading(false);
-            toast({
-                title: "Account Created!",
-                description: "Welcome to Cinesaga! Your account has been created successfully.",
+        // if (success) {
+            // Register the user
+            await handleRegister({
+                email: formData.email,
+                password: formData.password,
+                otpCode: otp,
+                mobile: formData.mobile,
+                agreement: agreedToTerms ? 1 : 0,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
             });
-            navigate("/");
-        }, 1500);
+        // }
     };
 
-    const handleResendOTP = () => {
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            toast({
-                title: "OTP Resent!",
-                description: "A new OTP has been sent to your registered contact.",
-            });
-        }, 1000);
+    const handleResendOTP = async () => {
+        await sendOtp({
+            identifier: formData.authMethod === "email" ? formData.email : formData.mobile,
+            type: formData.authMethod,
+            purpose: "registration",
+        });
     };
 
     return (
@@ -235,6 +250,26 @@ const SignUp = () => {
                                     </div>
                                 </div>
 
+                                {/* Enhanced Password Field */}
+                                <div className="space-y-3">
+                                    <Label htmlFor="password" className="text-sm font-semibold text-foreground">
+                                        Password
+                                    </Label>
+                                    <div className="relative group">
+                                        <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-foreground-muted w-4 h-4 group-focus-within:text-primary transition-colors" />
+                                        <Input
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            placeholder="Create a strong password"
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="pl-10 h-12 border-border/50 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
                                 {/* Enhanced Verification Method Selection */}
                                 <div className="space-y-4">
                                     <Label className="text-sm font-semibold text-foreground">Verification Method</Label>
@@ -337,9 +372,9 @@ const SignUp = () => {
                                 <Button
                                     type="submit"
                                     className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    disabled={isLoading}
+                                    disabled={isOtpLoading}
                                 >
-                                    {isLoading ? (
+                                    {isOtpLoading ? (
                                         <div className="flex items-center space-x-2">
                                             <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                                             <span>Sending OTP...</span>
@@ -398,7 +433,7 @@ const SignUp = () => {
                                         type="button"
                                         variant="link"
                                         onClick={handleResendOTP}
-                                        disabled={isLoading}
+                                        disabled={isOtpLoading}
                                         className="p-0 h-auto text-primary hover:text-primary-dark font-medium"
                                     >
                                         Resend OTP
@@ -410,12 +445,12 @@ const SignUp = () => {
                                     <Button
                                         type="submit"
                                         className="w-full h-12 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary-dark hover:via-primary-dark hover:to-accent-dark text-primary-foreground font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        disabled={isLoading || otp.length !== 6}
+                                        disabled={isOtpLoading || isRegisterLoading || otp.length !== 6}
                                     >
-                                        {isLoading ? (
+                                        {isOtpLoading || isRegisterLoading ? (
                                             <div className="flex items-center space-x-2">
                                                 <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                                                <span>Verifying...</span>
+                                                <span>{isOtpLoading ? 'Verifying...' : 'Creating Account...'}</span>
                                             </div>
                                         ) : (
                                             <div className="flex items-center space-x-2">
